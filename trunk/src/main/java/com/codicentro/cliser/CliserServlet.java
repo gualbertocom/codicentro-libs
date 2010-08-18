@@ -12,7 +12,6 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0       Apr 20, 2009           Alexander Villalobos Yadró      New class.
  **/
-
 package com.codicentro.cliser;
 
 import com.codicentro.utils.CDCException;
@@ -49,6 +48,10 @@ public class CliserServlet extends HttpServlet {
     private WebApplicationContext wac = null;
     private String dateFormat = null;
 
+    /**
+     * 
+     * @throws ServletException
+     */
     @Override
     public void init() throws ServletException {
         rw = null;
@@ -86,18 +89,37 @@ public class CliserServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         rw = null;
         doAction(request, response);
     }
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         rw = null;
         doAction(request, response);
     }
 
+    /**
+     * 
+     * @param servletPath
+     * @param sch
+     * @return
+     * @throws CDCException
+     */
     private Element initBusinessLogic(String servletPath, String sch) throws CDCException {
         Iterator iBLs = fConfig.getChildren("business-logic").iterator();
         Element eBL = null;
@@ -121,6 +143,12 @@ public class CliserServlet extends HttpServlet {
         return eBL;
     }
 
+    /**
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String className = null;
         String methodName = null;

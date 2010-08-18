@@ -19,6 +19,8 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpSession;
  */
 public class RequestWrapper implements Serializable {
 
+    private Logger log = LoggerFactory.getLogger(ResponseWrapper.class);
     private ServletInputStream In;
     private byte buffer[] = new byte[4096];
     private String delimitor = null;
@@ -33,6 +36,11 @@ public class RequestWrapper implements Serializable {
     private final String charset = "ISO-8859-1";
     private HttpServletRequest request = null;
 
+    /**
+     * 
+     * @param _req
+     * @throws CDCException
+     */
     public RequestWrapper(HttpServletRequest _req) throws CDCException {
         try {
             request = _req;
@@ -59,19 +67,33 @@ public class RequestWrapper implements Serializable {
             }
             while (hasNextParameter()) {
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            log.error(ex.getCause().getMessage(), ex);
             throw new CDCException(ex);
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public HttpSession getSession() {
         return request.getSession();
     }
 
+    /**
+     * 
+     * @return
+     */
     public HashMap getEntry() {
         return entry;
     }
 
+    /**
+     *
+     * @param name
+     * @throws CDCException
+     */
     public void arrayWrapper(String name) throws CDCException {
         if (entry.containsKey(name)) {
             StringTokenizer idx = new StringTokenizer(TypeCast.toString(entry.get(name)), "||");
@@ -91,6 +113,10 @@ public class RequestWrapper implements Serializable {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getEntryKeys() {
         String r = "[";
         Iterator i = entry.keySet().iterator();
@@ -100,6 +126,10 @@ public class RequestWrapper implements Serializable {
         return r + "]";
     }
 
+    /**
+     * 
+     * @return
+     */
     private String readLine() {
         try {
             int noData = In.readLine(buffer, 0, buffer.length);
@@ -107,15 +137,23 @@ public class RequestWrapper implements Serializable {
                 return new String(buffer, 0, noData, charset);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error(ex.getCause().getMessage(), ex);
         }
         return null;
     }
 
+    /**
+     * 
+     * @return
+     */
     public HttpServletRequest getRequest() {
         return request;
     }
 
+    /**
+     * 
+     * @return
+     */
     private boolean hasNextParameter() {
         boolean isFileType = false;
         String filename = null;
@@ -137,7 +175,7 @@ public class RequestWrapper implements Serializable {
                         if (filename.length() == 0) {
                             filename = null;
                         }
-                      //  System.out.println("fileName=" + filename);
+                        //  System.out.println("fileName=" + filename);
                     }
 
                     //- Move the pointer to the start of the data
@@ -153,12 +191,18 @@ public class RequestWrapper implements Serializable {
                     return true;
                 }
             }
-        } catch (Exception E) {
-            E.printStackTrace();
+        } catch (Exception ex) {
+            log.error(ex.getCause().getMessage(), ex);
         }
         return false;
     }
 
+    /**
+     * 
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     private Object readFile() throws FileNotFoundException, IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -175,8 +219,8 @@ public class RequestWrapper implements Serializable {
             baos.flush();
             baos.close();
             return new ByteArrayInputStream(baos.toByteArray());
-        } catch (Exception E) {
-            //System.out.println(E);
+        } catch (Exception ex) {
+            log.error(ex.getCause().getMessage(), ex);
         }
 
         return null;

@@ -54,6 +54,10 @@ public class BL implements Serializable {
     @Resource
     private Dao dao;
 
+    /**
+     *
+     * @throws CDCException
+     */
     public void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
             throw new CDCException("cliser.msg.error.sessionexpired");
@@ -62,10 +66,19 @@ public class BL implements Serializable {
         IU = sessionEntity.getIU();
     }
 
+    /**
+     *
+     * @return
+     */
     public Object getIU() {
         return IU;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param eClazz
+     */
     public <T> void entity(Class<T> eClazz) {
         this.eClazz = eClazz;
     }
@@ -161,14 +174,30 @@ public class BL implements Serializable {
         responseWrapper.setDataXstreamJson(eClazz, eClazzAlia, findByCriteria());
     }
 
+    /**
+     *
+     * @param name
+     * @param type
+     */
     public void alias(String name, Class type) {
         responseWrapper.getXStreamJson().alias(name, type);
     }
 
+    /**
+     *
+     * @param alias
+     * @param fieldName
+     */
     public void aliasField(String alias, String fieldName) {
         responseWrapper.getXStreamJson().aliasField(alias, eClazz, fieldName);
     }
 
+    /**
+     *
+     * @param <T>
+     * @return
+     * @throws CDCException
+     */
     private <T> List<T> findByCriteria() throws CDCException {
         if (getDao() == null) {
             throw new CDCException("cliser.msg.error.dao.notinitialized");
@@ -180,6 +209,10 @@ public class BL implements Serializable {
         }
     }
 
+    /**
+     *
+     * @throws CDCException
+     */
     public void addParam() throws CDCException {
         if (oEntity == null) {
             try {
@@ -192,16 +225,31 @@ public class BL implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @param <T>
+     * @param entity
+     * @return
+     */
     public <T> T save(T entity) {
         return getDao().persist(entity);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param json
+     * @return
+     */
     private <T> T getDataXstreamJson(String json) {
         XStream xstreamJson = new XStream(new JettisonMappedXmlDriver());
         return (T) xstreamJson.fromXML(json);
     }
 
-    // Start configuration
+    /**
+     * 
+     * @param context
+     */
     public void setContext(WebApplicationContext context) {
         this.context = context;
     }
@@ -263,18 +311,43 @@ public class BL implements Serializable {
         return result;
     }
 
+    /**
+     *
+     * @param paramName
+     * @return
+     * @throws CDCException
+     */
     public String stringValue(String paramName) throws CDCException {
         return TypeCast.toString(form(paramName));
     }
 
+    /**
+     *
+     * @param paramName
+     * @return
+     * @throws CDCException
+     */
     public Short shortValue(String paramName) throws CDCException {
         return TypeCast.toShort(form(paramName));
     }
 
+    /**
+     * 
+     * @param paramName
+     * @return
+     * @throws CDCException
+     */
     public Date dateValue(String paramName) throws CDCException {
         return TypeCast.toDate(form(paramName), getDateFormat());
     }
 
+    /**
+     * 
+     * @param paramName
+     * @param dateFormat
+     * @return
+     * @throws CDCException
+     */
     public Date dateValue(String paramName, String dateFormat) throws CDCException {
         return TypeCast.toDate(form(paramName), dateFormat);
     }

@@ -24,10 +24,8 @@ import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,10 +64,18 @@ public class ResponseWrapper implements Serializable {
         xstreamJson.setMode(XStream.NO_REFERENCES);
     }
 
+    /**
+     *
+     * @param data
+     */
     public void setData(String data) {
         this.data.add(data);
     }
 
+    /**
+     * 
+     * @return
+     */
     public XStream getXStreamJson() {
         return xstreamJson;
     }
@@ -116,6 +122,11 @@ public class ResponseWrapper implements Serializable {
         data.add(tmpData);
     }
 
+    /**
+     *
+     * @param table
+     * @throws CDCException
+     */
     public void setMisc(Table table) throws CDCException {
         page = table.getPage();
         pageSize = table.getPageSize();
@@ -131,14 +142,26 @@ public class ResponseWrapper implements Serializable {
         this.rowCount = rowCount;
     }
 
+    /**
+     *
+     * @param colCount
+     */
     public void setColCount(int colCount) {
         this.colCount = colCount;
     }
 
+    /**
+     * 
+     * @param page
+     */
     public void setPage(int page) {
         this.page = page;
     }
 
+    /**
+     * 
+     * @param pageSize
+     */
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
@@ -185,6 +208,11 @@ public class ResponseWrapper implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @return
+     * @throws CDCException
+     */
     public PrintWriter getWriter() throws CDCException {
         try {
             return response.getWriter();
@@ -194,6 +222,10 @@ public class ResponseWrapper implements Serializable {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public HttpServletResponse getResponse() {
         return response;
     }

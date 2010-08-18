@@ -1,15 +1,12 @@
 package com.codicentro.security;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SessionEntityBase {
 
+    private Logger log = LoggerFactory.getLogger(Encryption.class);
     private Object IU;
-    public SessionEntityBase() {
-
-    }
 
     /**
      * 
@@ -27,6 +24,10 @@ public class SessionEntityBase {
         return IU;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String toJSON() {
         String rs = "";
         String mn = null;// Method name
@@ -40,14 +41,9 @@ public class SessionEntityBase {
                         v = "\"" + v + "\"";
                     }
                     rs += ((rs.equals("")) ? "" : ",") + this.getClass().getMethods()[i].getName().replace("get", "") + ":" + v;
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(SessionEntityBase.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(SessionEntityBase.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
-                    Logger.getLogger(SessionEntityBase.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    log.error(ex.getCause().getMessage(), ex);
                 }
-
             }
         }
         return rs;
