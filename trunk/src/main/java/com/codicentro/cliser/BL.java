@@ -18,8 +18,6 @@ import com.codicentro.security.SessionEntityBase;
 import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +40,7 @@ public class BL implements Serializable {
     private ResponseWrapper responseWrapper = null;
     private DBProtocolType dbProtocol = null;
     private String dbVersion = null;
-    private DetachedCriteria criteria;
+    private DetachedCriteria criteria = null;
     private Object IU = "";
     private SessionEntityBase sessionEntity = null;
     private String sessionName = null;
@@ -166,30 +164,37 @@ public class BL implements Serializable {
         }
     }
 
+    public <T> void paramLK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
+        if (paramName != null) {
+            String param = paramString(paramName);
+            if (TypeCast.isNullOrEmpy(param)) {
+                return;
+            }
+            if (TypeCast.isNullOrEmpy(define)
+                    || ((define.indexOf("?%") == -1)
+                    && (define.indexOf("%?") == -1)
+                    && (define.indexOf("%?%") == -1))) {
+                throw new CDCException("cliser.msg.error.criteria.like.baddefined");
+            } else {
+                param = define.replaceAll("\\?", param);
+            }
+            if (criteria == null) {
+                criteria = DetachedCriteria.forClass(this.eClazz);
+            }
+            if (ignoreCase) {
+                criteria.createCriteria(propertyNameJoin).add(Restrictions.like(propertyName, param).ignoreCase());
+            } else {
+                criteria.createCriteria(propertyNameJoin).add(Restrictions.like(propertyName, param));
+            }
+        }
+    }
+
     /**
      * 
      * @throws CDCException
      */
     public void find() throws CDCException {
-        responseWrapper.setDataXstreamJson(eClazz, eClazzAlia, findByCriteria());
-    }
-
-    /**
-     *
-     * @param name
-     * @param type
-     */
-    public void alias(String name, Class type) {
-        responseWrapper.getXStreamJson().alias(name, type);
-    }
-
-    /**
-     *
-     * @param alias
-     * @param fieldName
-     */
-    public void aliasField(String alias, String fieldName) {
-        responseWrapper.getXStreamJson().aliasField(alias, eClazz, fieldName);
+        responseWrapper.setDataJSON(eClazz, eClazzAlia, findByCriteria());
     }
 
     /**
@@ -207,6 +212,23 @@ public class BL implements Serializable {
         } else {
             return getDao().find(eClazz);
         }
+    }
+
+    /**
+     * 
+     * @param field
+     */
+    public void exclude(String field) {
+        responseWrapper.addExclude(field);
+    }
+
+    /**
+     * 
+     * @param field
+     * @param alias
+     */
+    public void alias(String field, String alias) {
+        responseWrapper.getJSON().include(field).rootName(alias); //include(field).rootName(alias);
     }
 
     /**
@@ -236,14 +258,11 @@ public class BL implements Serializable {
     }
 
     /**
-     *
-     * @param <T>
-     * @param json
-     * @return
+     * 
+     * @param id
      */
-    private <T> T getDataXstreamJson(String json) {
-        XStream xstreamJson = new XStream(new JettisonMappedXmlDriver());
-        return (T) xstreamJson.fromXML(json);
+    public void remove(Serializable id) {
+        getDao().delete(getDao().get(eClazz, id));
     }
 
     /**
@@ -478,6 +497,7 @@ public class BL implements Serializable {
      * @param dateFormat the dateFormat to set
      */
     public void setDateFormat(String dateFormat) {
+        responseWrapper.setDateFormat(dateFormat);
         this.dateFormat = dateFormat;
     }
 }
