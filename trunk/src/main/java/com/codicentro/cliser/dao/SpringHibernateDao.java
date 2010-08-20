@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.Resource;
 import org.hibernate.criterion.DetachedCriteria;
+import org.slf4j.Logger;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -21,14 +22,31 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
 
+    private Logger log = org.slf4j.LoggerFactory.getLogger(SpringHibernateDao.class);
+
     @Resource(name = "hibernateTemplate")
     public void setTemplate(HibernateTemplate hibernateTemplate) {
         setHibernateTemplate(hibernateTemplate);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public <T> void delete(T entity) {
+        try {
+            getHibernateTemplate().delete(entity);
+        } catch (Exception ex) {
+            log.error(ex.getCause().getMessage(), ex);
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <T> T persist(T entity) {
-        getHibernateTemplate().saveOrUpdate(entity);
+        try {
+            getHibernateTemplate().saveOrUpdate(entity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return entity;
     }
 

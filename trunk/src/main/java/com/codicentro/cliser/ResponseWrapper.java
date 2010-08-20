@@ -22,8 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.codicentro.model.Table;
 import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import flexjson.JSONSerializer;
+import flexjson.transformer.DateTransformer;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,12 +49,11 @@ public class ResponseWrapper implements Serializable {
     private int pageSize = -1;
     private boolean success = true;
     private PrintWriter writer = null;
-    private XStream xstreamJson = null;
+    private JSONSerializer dataJSON = null;
+    private boolean deepSerializer = false;
+    private List<String> excludes = null;
+    private String dateFormat = null;
 
-    /**
-     *
-     * @param response
-     */
     public ResponseWrapper(HttpServletResponse response) {
         this.response = response;
         data = new HashSet<String>();
@@ -60,8 +61,16 @@ public class ResponseWrapper implements Serializable {
         tracert = new StringBuffer();
         rowCount = -1;
         colCount = -1;
-        xstreamJson = new XStream(new JettisonMappedXmlDriver());
-        xstreamJson.setMode(XStream.NO_REFERENCES);
+        dataJSON = new JSONSerializer();
+        excludes = new ArrayList<String>();
+    }
+
+    /**
+     * 
+     * @param field
+     */
+    public void addExclude(String field) {
+        excludes.add(field);
     }
 
     /**
@@ -76,8 +85,17 @@ public class ResponseWrapper implements Serializable {
      * 
      * @return
      */
-    public XStream getXStreamJson() {
-        return xstreamJson;
+    public JSONSerializer getJSON() {
+        return dataJSON;
+    }
+
+    /**
+     *
+     * @param <T>
+     * @param pojos
+     */
+    public <T> void setDataJSON(List<T> pojos) {
+        dataJSON(null, pojos);
     }
 
     /**
@@ -86,8 +104,8 @@ public class ResponseWrapper implements Serializable {
      * @param eClazz
      * @param pojos
      */
-    public <T> void setDataXstreamJson(Class<T> eClazz, List<T> pojos) {
-        dataXstreamJson(eClazz, null, pojos);
+    public <T> void setDataJSON(Class<T> eClazz, List<T> pojos) {
+        setDataJSON(eClazz, null, pojos);
     }
 
     /**
@@ -97,29 +115,39 @@ public class ResponseWrapper implements Serializable {
      * @param eClazzAlia
      * @param pojos
      */
-    public <T> void setDataXstreamJson(Class<T> eClazz, String eClazzAlia, List<T> pojos) {
-        dataXstreamJson(eClazz, eClazzAlia, pojos);
+    public <T> void setDataJSON(Class<T> eClazz, String eClazzAlia, List<T> pojos) {
+        eClazzAlia = (eClazzAlia == null) ? eClazz.getSimpleName() : eClazzAlia;
+        dataJSON(eClazzAlia, pojos);
     }
 
     /**
      * 
      * @param <T>
-     * @param eClazz
      * @param eClazzAlia
      * @param pojos
      */
-    private <T> void dataXstreamJson(Class<T> eClazz, String eClazzAlia, List<T> pojos) {
-        eClazzAlia = (eClazzAlia == null) ? eClazz.getSimpleName() : eClazzAlia;
-        xstreamJson.alias(eClazzAlia, eClazz);
-        String tmpData = "\"" + eClazzAlia + "\":[]";
+    private <T> void dataJSON(String eClazzAlia, List<T> pojos) {
+        dataJSON.rootName(eClazzAlia);
+        dataJSON.setExcludes(excludes);
+        dataJSON.transform(new DateTransformer(dateFormat), Date.class);
         if (!pojos.isEmpty()) {
-            tmpData = xstreamJson.toXML(pojos);
-            tmpData = tmpData.substring("{\"list\":[{".length(), tmpData.length() - 3);
-            if (TypeCast.isNullOrEmpy(tmpData)) {
-                tmpData = "\"" + eClazzAlia + "\":[]";
+            StringBuilder out = new StringBuilder();
+            if (deepSerializer) {
+                log.info("/* DEEP SERIALIZER */");
+                dataJSON.deepSerialize(pojos, out);
+            } else {
+                log.info("/* SERIALIZER */");
+                dataJSON.serialize(pojos, out);
             }
+            if (out.toString().startsWith("{")) {
+                data.add(out.toString().substring(1, out.toString().length() - 1));
+            } else {
+                data.add(out.toString());
+            }
+        } else {
+            data.add("\"" + eClazzAlia + "\":[]");
         }
-        data.add(tmpData);
+
     }
 
     /**
@@ -241,6 +269,7 @@ public class ResponseWrapper implements Serializable {
             json.append(",success:").append(success);
             json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
             json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
+            //json.append(",data:[");
             String tmpData = null;
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
                 tmpData = i.next();
@@ -248,6 +277,7 @@ public class ResponseWrapper implements Serializable {
                     json.append(",").append(tmpData);
                 }
             }
+            //json.append("]");
             json.append(",rowCount:").append(rowCount);
             json.append(",colCount:").append(colCount);
             json.append(",page:").append(page);
@@ -297,5 +327,33 @@ public class ResponseWrapper implements Serializable {
         r = r.replaceAll("ú", "\\\\372");
         r = r.replaceAll("Ú", "\\\\332");
         return r;
+    }
+
+    /**
+     * @return the deepSerializer
+     */
+    public boolean isDeepSerializer() {
+        return deepSerializer;
+    }
+
+    /**
+     * @param deepSerializer the deepSerializer to set
+     */
+    public void setDeepSerializer(boolean deepSerializer) {
+        this.deepSerializer = deepSerializer;
+    }
+
+    /**
+     * @return the dateFormat
+     */
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    /**
+     * @param dateFormat the dateFormat to set
+     */
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 }

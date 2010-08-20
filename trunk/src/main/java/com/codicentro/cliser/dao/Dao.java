@@ -24,12 +24,20 @@ public interface Dao {
 
     /**
      *
+     * @param <T>
+     * @param entity
+     * @return
+     */
+    public <T> void delete(T entity);
+
+    /**
+     *
      * @param entities
      */
     public void persist(Object[] entities);
 
     /**
-     *
+     * 
      * @param <T>
      * @param entityClass
      * @return
@@ -71,7 +79,7 @@ public interface Dao {
     public <T> List<T> find(DetachedCriteria criteria);
 
     /**
-     * 
+     *
      * @param <T>
      * @param criteria
      * @param start
