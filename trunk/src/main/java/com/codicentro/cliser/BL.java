@@ -19,6 +19,7 @@ import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -98,9 +99,7 @@ public class BL implements Serializable {
      * @param paramName
      */
     public void paramEQ(String propertyName, String paramName) throws CDCException {
-        if (paramName != null) {
-            paramEQ(propertyName, paramName, false);
-        }
+        paramEQ(propertyName, paramName, false);
     }
 
     /**
@@ -110,14 +109,40 @@ public class BL implements Serializable {
      * @param ignoreCase
      */
     public void paramEQ(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
-        if (paramName != null) {
+        if (!TypeCast.isNullOrEmpy(paramName)) {
+            paramEQ(ignoreCase, propertyName, form(paramName));
+        }
+    }
+
+    /**
+     * Apply an "equal" constraint to the named property
+     * @param propertyName
+     * @param value
+     * @throws CDCException
+     */
+    public void paramEQ(String propertyName, Object value) throws CDCException {
+        paramEQ(false, propertyName, value);
+    }
+
+    /**
+     * Apply case-insensitive an "equal" constraint to the named property when ignoreCase is true
+     * @param ignoreCase
+     * @param propertyName
+     * @param value
+     * @throws CDCException
+     */
+    public void paramEQ(boolean ignoreCase, String propertyName, Object value) throws CDCException {
+        if (value != null) {
             if (criteria == null) {
                 criteria = DetachedCriteria.forClass(eClazz);
             }
-            if (ignoreCase) {
-                criteria.add(Restrictions.eq(propertyName, form(paramName)).ignoreCase());
-            } else {
-                criteria.add(Restrictions.eq(propertyName, form(paramName)));
+            try {
+                if (ignoreCase) {
+                    criteria.add(Restrictions.eq(propertyName, value).ignoreCase());
+                } else {
+                    criteria.add(Restrictions.eq(propertyName, value));
+                }
+            } catch (ClassCastException ex) {
             }
         }
     }
@@ -348,6 +373,14 @@ public class BL implements Serializable {
      */
     public Short shortValue(String paramName) throws CDCException {
         return TypeCast.toShort(form(paramName));
+    }
+
+    public BigInteger integerValue(String paramName) throws CDCException {
+        return TypeCast.toBigInteger(form(paramName));
+    }
+
+    public Long longValue(String paramName) throws CDCException {
+        return TypeCast.toLong(form(paramName));
     }
 
     /**

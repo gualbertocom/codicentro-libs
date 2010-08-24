@@ -18,6 +18,7 @@ package com.codicentro.utils;
 import com.codicentro.model.Table;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class TypeCast {
         return (!s.equals("N")
                 && !s.equals("NO")
                 && !s.equals("FALSE")
-                && !((ifNumber(s)) && (StringToint(s) == 0))
+                && !((ifNumber(s)) && (toInt(s) == 0))
                 && !s.equals("OFF"));
     }
 
@@ -94,12 +95,12 @@ public class TypeCast {
         }
     }
 
-    public static Integer intToInteger(int pInt) {
+    public static Integer toInteger(int pInt) {
         return new Integer(pInt);
     }
 
-    public static int ObjectToint(Object obj) throws CDCException {
-        return StringToint(toString(obj));
+    public static int toInt(Object obj) throws CDCException {
+        return toInt(toString(obj));
     }
 
     public static String OnlyWords(String s) throws CDCException {
@@ -122,7 +123,7 @@ public class TypeCast {
         return result;
     }
 
-    public static int StringToint(String str) throws CDCException {
+    public static int toInt(String str) throws CDCException {
         int r = 0;
         try {
             r = (((str == null) || (str.trim().equals(""))) ? 0 : Integer.parseInt(str.trim()));
@@ -132,7 +133,7 @@ public class TypeCast {
         return r;
     }
 
-    public static Integer StringToInteger(String str) throws CDCException {
+    public static Integer toInteger(String str) throws CDCException {
         Integer result = new Integer(0);
         try {
             if ((str != null) && (!str.trim().equals(""))) {
@@ -142,6 +143,22 @@ public class TypeCast {
             throw new CDCException(ex);
         }
         return result;
+    }
+
+    public static BigInteger toBigInteger(Object o) {
+        try {
+            return new BigInteger(toString(o));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Long toLong(Object o) {
+        try {
+            return toBigDecimal(o).longValue();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -197,13 +214,11 @@ public class TypeCast {
     }
 
     public static Integer toInteger(Object o) throws CDCException {
-        Integer result = null;
         try {
-            result = Integer.valueOf(ObjectToint(o));
+            return Integer.valueOf(toInt(o));
         } catch (Exception ex) {
-            throw new CDCException(ex);
+            return null;
         }
-        return result;
     }
 
     public static BigDecimal toNumber(String s) throws CDCException {
@@ -226,11 +241,17 @@ public class TypeCast {
         return result;
     }
 
+    /**
+     * 
+     * @param o
+     * @return
+     * @throws CDCException
+     */
     public static Short toShort(Object o) throws CDCException {
         try {
             return toBigDecimal(o).shortValue();
         } catch (Exception ex) {
-            throw new CDCException(ex);
+            return null;
         }
     }
 

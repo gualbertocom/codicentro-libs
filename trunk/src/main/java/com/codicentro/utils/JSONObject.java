@@ -65,7 +65,7 @@ public class JSONObject {
      * @param i
      */
     public void put(String key, int i) {
-        this.o.put(key, TypeCast.intToInteger(i));
+        this.o.put(key, TypeCast.toInteger(i));
     }
 
     /**

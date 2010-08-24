@@ -32,7 +32,7 @@ public class Messages {
         params = null;
         while (st.hasMoreTokens()) {
             if (i == 0) {
-                code = TypeCast.StringToint(st.nextToken());
+                code = TypeCast.toInt(st.nextToken());
             } else {
                 if (params == null) {
                     params = new ArrayList();

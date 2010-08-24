@@ -862,7 +862,7 @@ public class Table implements Serializable {
         int result = 0;
         try {
             if ((getValue(index) != null) && (getValue(index).containsKey(key))) {
-                result = TypeCast.ObjectToint(getValue(index).get(key));
+                result = TypeCast.toInt(getValue(index).get(key));
             }
         } catch (Exception ex) {
             throw new CDCException(ex);
@@ -874,7 +874,7 @@ public class Table implements Serializable {
         int result = 0;
         try {
             if ((getValue(index) != null) && (getValue(index).containsKey(key))) {
-                result = TypeCast.ObjectToint(getValue(index).get(key));
+                result = TypeCast.toInt(getValue(index).get(key));
             }
         } catch (Exception ex) {
             throw new CDCException(ex);

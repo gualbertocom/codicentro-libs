@@ -217,7 +217,7 @@ public class ResponseWrapper implements Serializable {
         if ((msg != null) && (msg.indexOf("CDCError:") != -1)) {
             msg = msg.substring(msg.indexOf("CDCError:") + 9);
         } else {
-            msg = e.getCause().getMessage();
+            msg = (e.getCause() == null) ? e.getMessage() : e.getCause().getMessage();
         }
         setMessage(msg, false);
     }
