@@ -19,6 +19,7 @@ import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
+//import org.springframework.web.context.WebApplicationContext;
 
 @Service
 public class BL implements Serializable {
@@ -45,7 +46,7 @@ public class BL implements Serializable {
     private Object IU = "";
     private SessionEntityBase sessionEntity = null;
     private String sessionName = null;
-    private WebApplicationContext context = null;
+    //private WebApplicationContext context = null;
     private Class eClazz = null;
     private String eClazzAlia = null;
     private Object oEntity = null;
@@ -59,7 +60,7 @@ public class BL implements Serializable {
      */
     public void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
-            throw new CDCException("cliser.msg.error.sessionexpired");
+            throw new CDCException("lng.msg.error.sessionexpired");
         }
         sessionEntity = (SessionEntityBase) requestWrapper.getSession().getAttribute(sessionName);
         IU = sessionEntity.getIU();
@@ -294,9 +295,9 @@ public class BL implements Serializable {
      * 
      * @param context
      */
-    public void setContext(WebApplicationContext context) {
+ /*   public void setContext(WebApplicationContext context) {
         this.context = context;
-    }
+    }*/
 
     /**
      *
@@ -377,6 +378,10 @@ public class BL implements Serializable {
 
     public BigInteger integerValue(String paramName) throws CDCException {
         return TypeCast.toBigInteger(form(paramName));
+    }
+
+    public BigDecimal decimalValue(String paramName) throws CDCException {
+        return TypeCast.toBigDecimal(form(paramName));
     }
 
     public Long longValue(String paramName) throws CDCException {

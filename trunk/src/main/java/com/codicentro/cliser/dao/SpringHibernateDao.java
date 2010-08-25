@@ -32,21 +32,13 @@ public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <T> void delete(T entity) {
-        try {
-            getHibernateTemplate().delete(entity);
-        } catch (Exception ex) {
-            log.error(ex.getCause().getMessage(), ex);
-        }
+        getHibernateTemplate().delete(entity);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <T> T persist(T entity) {
-        try {
-            getHibernateTemplate().saveOrUpdate(entity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        getHibernateTemplate().saveOrUpdate(entity);
         return entity;
     }
 

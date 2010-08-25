@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class TypeCast {
@@ -504,32 +503,7 @@ public class TypeCast {
         return null;
     }
 
-    /**
-     * Get Annotation Columns Name
-     * @param o
-     * @return
-     */
-    public static List<String> GAC(Object o) {
-        List<String> rs = new ArrayList<String>();
-        java.lang.reflect.Field[] flds = o.getClass().getDeclaredFields();
-        java.lang.annotation.Annotation[] anns = null;
-        javax.persistence.Column col = null;
-        javax.persistence.JoinColumn jcol = null;
-        for (java.lang.reflect.Field fld : flds) {
-            anns = fld.getAnnotations();
-            if ((anns != null) && (anns.length > 0)) {
-                for (java.lang.annotation.Annotation ann : anns) {
-                    if (ann instanceof javax.persistence.Column) {
-                        rs.add(((javax.persistence.Column) ann).name());
-                    } else if (ann instanceof javax.persistence.JoinColumn) {
-                        rs.add(((javax.persistence.JoinColumn) ann).name());
-                    }
-                }
-            }
-        }
-        return rs;
-    }
-
+   
     /**
      * Get Object by name, used reflections for find method
      * @param o

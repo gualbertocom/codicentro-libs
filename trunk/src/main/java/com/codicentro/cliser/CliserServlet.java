@@ -161,7 +161,7 @@ public class CliserServlet extends HttpServlet {
             _cliser.setResquestWrapper(request);
             _cliser.setResponseWrapper(response);
             _cliser.setDao(wac.getBean(BL.class).getDao());
-            _cliser.setContext(wac);
+         //   _cliser.setContext(wac);
             _cliser.setDBProtocol(dbProtocol);
             _cliser.setDateFormat(dateFormat);
             _cliser.setDBVersion(dbVersion);
