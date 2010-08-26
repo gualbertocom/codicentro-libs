@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class TransportContext {
 
-    private Logger log = LoggerFactory.getLogger(Encryption.class);
+    private Logger log = LoggerFactory.getLogger(TransportContext.class);
 
     /**
      *
