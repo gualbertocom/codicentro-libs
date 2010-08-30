@@ -314,16 +314,22 @@ public class ResponseWrapper implements Serializable {
     private String charSpecial(String r) {
         r = r.replaceAll("\n", "\\\\n");
         r = r.replaceAll("\r\n", "\\\\n");
+
         r = r.replaceAll("ñ", "\\\\361");
         r = r.replaceAll("Ñ", "\\\\321");
+
         r = r.replaceAll("á", "\\\\341");
         r = r.replaceAll("Á", "\\\\301");
-        r = r.replaceAll("é", "\\\\361");
+        
+        r = r.replaceAll("é", "\\\\351");
         r = r.replaceAll("É", "\\\\311");
-        r = r.replaceAll("í", "\\\\351");
+
+        r = r.replaceAll("í", "\\\\355");
         r = r.replaceAll("Í", "\\\\315");
+
         r = r.replaceAll("ó", "\\\\363");
         r = r.replaceAll("Ó", "\\\\323");
+
         r = r.replaceAll("ú", "\\\\372");
         r = r.replaceAll("Ú", "\\\\332");
         return r;
