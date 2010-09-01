@@ -87,6 +87,29 @@ public class BL implements Serializable {
      * 
      * @param <T>
      * @param eClazz
+     * @param idClass
+     * @param id
+     * @return
+     * @throws CDCException
+     */
+    public <T> T instance(Class<T> eClazz, Class idClass, Serializable id) throws CDCException {
+        T entity = (id == null) ? null : dao.get(eClazz, id);
+        if (entity != null) {
+            return entity;
+        } else {
+            try {
+                return eClazz.getConstructor(idClass).newInstance(id);
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+                throw new CDCException(ex);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param <T>
+     * @param eClazz
      * @param eClazzAlia
      */
     public <T> void entity(Class<T> eClazz, String eClazzAlia) {
@@ -143,7 +166,9 @@ public class BL implements Serializable {
                 } else {
                     criteria.add(Restrictions.eq(propertyName, value));
                 }
-            } catch (ClassCastException ex) {
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+                throw new CDCException(ex);
             }
         }
     }
@@ -295,10 +320,9 @@ public class BL implements Serializable {
      * 
      * @param context
      */
- /*   public void setContext(WebApplicationContext context) {
-        this.context = context;
+    /*   public void setContext(WebApplicationContext context) {
+    this.context = context;
     }*/
-
     /**
      *
      * @param request
