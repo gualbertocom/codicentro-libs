@@ -60,7 +60,8 @@ public class BL implements Serializable {
      */
     public void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
-            throw new CDCException("lng.msg.error.sessionexpired");
+            //throw new CDCException("lng.msg.error.sessionexpired");
+            newSession(new SessionEntityBase("avillalobos"));
         }
         sessionEntity = (SessionEntityBase) requestWrapper.getSession().getAttribute(sessionName);
         IU = sessionEntity.getIU();
@@ -336,8 +337,8 @@ public class BL implements Serializable {
      * 
      * @param response
      */
-    public void setResponseWrapper(HttpServletResponse response) {
-        responseWrapper = new ResponseWrapper(response);
+    public void setResponseWrapper(HttpServletResponse response) throws CDCException {
+        responseWrapper = new ResponseWrapper(response, stringValue("callback"));
     }
 
     /**

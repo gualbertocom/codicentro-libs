@@ -47,6 +47,7 @@ public class CliserServlet extends HttpServlet {
     private ResponseWrapper rw = null;
     private WebApplicationContext wac = null;
     private String dateFormat = null;
+    private String callback = null;
 
     /**
      * 
@@ -78,6 +79,9 @@ public class CliserServlet extends HttpServlet {
             dateFormat = (e == null) ? "dd/mm/yyyy" : e.getValue();
             log.info("Date format -> " + dateFormat);
             wac = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+            if (wac == null) {
+                throw new CDCException("Web application context is not initialize.");
+            }
             log.info("Web application context -> " + wac.getId());
             log.info("*************************");
             log.info("* Bean definition names *");
@@ -154,6 +158,7 @@ public class CliserServlet extends HttpServlet {
         String methodName = null;
         rw = null;
         try {
+            callback = request.getParameter("callback");
             Element eBL = initBusinessLogic(request.getServletPath(), request.getParameter("schema"));
             className = eBL.getAttribute("package").getValue() + "." + eBL.getAttribute("name").getValue() + "BL";
             BL _cliser = (BL) Class.forName(className).newInstance();
@@ -161,7 +166,6 @@ public class CliserServlet extends HttpServlet {
             _cliser.setResquestWrapper(request);
             _cliser.setResponseWrapper(response);
             _cliser.setDao(wac.getBean(BL.class).getDao());
-         //   _cliser.setContext(wac);
             _cliser.setDBProtocol(dbProtocol);
             _cliser.setDateFormat(dateFormat);
             _cliser.setDBVersion(dbVersion);
@@ -174,39 +178,39 @@ public class CliserServlet extends HttpServlet {
             _method.invoke(_cliser);
         } catch (InstantiationException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (IllegalAccessException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (IllegalArgumentException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (InvocationTargetException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (NoSuchMethodException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage("Controller \"" + methodName + "\" not found in businnes logic \"" + className + "\".", false);
         } catch (SecurityException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (ClassNotFoundException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage("Class businnes logic \"" + className + "\" not found.", false);
         } catch (CDCException ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            rw = new ResponseWrapper(response);
+            rw = new ResponseWrapper(response, callback);
             rw.setMessage(ex);
         }
         if (rw != null) {

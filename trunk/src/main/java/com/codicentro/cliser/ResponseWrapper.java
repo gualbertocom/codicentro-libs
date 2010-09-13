@@ -53,9 +53,11 @@ public class ResponseWrapper implements Serializable {
     private boolean deepSerializer = false;
     private List<String> excludes = null;
     private String dateFormat = null;
+    private String callback = null;
 
-    public ResponseWrapper(HttpServletResponse response) {
+    public ResponseWrapper(HttpServletResponse response, String callback) {
         this.response = response;
+        this.callback = callback;
         data = new HashSet<String>();
         message = new StringBuffer();
         tracert = new StringBuffer();
@@ -265,10 +267,14 @@ public class ResponseWrapper implements Serializable {
     public void commit() throws CDCException {
         StringBuilder json = null;
         try {
-            json = new StringBuilder("{version:1.0");
-            json.append(",success:").append(success);
-            json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
-            json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
+            json = new StringBuilder();
+            if (callback != null) {
+                json.append(callback).append("(");
+            }
+            json.append("{\"version\":1.0");
+            json.append(",\"success\":").append(success);
+            json.append(",\"tracer\":[").append(((tracert == null) ? "" : tracert.toString())).append("]");
+            json.append(",\"message\":[").append(((message == null) ? "" : message.toString())).append("]");
             //json.append(",data:[");
             String tmpData = null;
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
@@ -278,11 +284,14 @@ public class ResponseWrapper implements Serializable {
                 }
             }
             //json.append("]");
-            json.append(",rowCount:").append(rowCount);
-            json.append(",colCount:").append(colCount);
-            json.append(",page:").append(page);
-            json.append(",pageSize:").append(pageSize);
+            json.append(",\"rowCount\":").append(rowCount);
+            json.append(",\"colCount\":").append(colCount);
+            json.append(",\"page\":").append(page);
+            json.append(",\"pageSize\":").append(pageSize);
             json.append("}");
+            if (callback != null) {
+                json.append(");");
+            }
             response.setHeader("Content-Type", "text/html");
             response.setHeader("Expires", "Mon, 01 Jan 2007 01:00:00 GMT");
             response.setHeader("Cache-Control", "must-revalidate");
@@ -320,7 +329,7 @@ public class ResponseWrapper implements Serializable {
 
         r = r.replaceAll("á", "\\\\341");
         r = r.replaceAll("Á", "\\\\301");
-        
+
         r = r.replaceAll("é", "\\\\351");
         r = r.replaceAll("É", "\\\\311");
 
