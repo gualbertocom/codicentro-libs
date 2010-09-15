@@ -296,6 +296,8 @@ public class ResponseWrapper implements Serializable {
             response.setHeader("Expires", "Mon, 01 Jan 2007 01:00:00 GMT");
             response.setHeader("Cache-Control", "must-revalidate");
             response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Access-Control-Allow-Origin", "*");
+
             writer = response.getWriter();
             writer.print(charSpecial(json.toString()));
             writer.flush();
