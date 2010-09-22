@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,6 +163,13 @@ public class ResponseWrapper implements Serializable {
         pageSize = table.getPageSize();
         rowCount = table.rowCount();
         colCount = table.colCount();
+    }
+
+    public void setMisc(Map m) throws CDCException {
+        page = TypeCast.toInt(m.get("page"));
+        pageSize = TypeCast.toInt(m.get("pageSize"));
+        rowCount = TypeCast.toInt(m.get("rowCount"));
+        colCount = TypeCast.toInt(m.get("colCount"));
     }
 
     /**
