@@ -80,7 +80,7 @@ public class CliserServlet extends HttpServlet {
             log.info("Date format -> " + dateFormat);
             wac = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
             if (wac == null) {
-                throw new CDCException("Web application context is not initialize.");
+                log.warn("Web application context Spring is not initialize.");
             }
             log.info("Web application context -> " + wac.getId());
             log.info("*************************");
