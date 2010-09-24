@@ -89,4 +89,10 @@ public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
     public <T> List<T> find(DetachedCriteria criteria) {
         return find(criteria, -1, -1);
     }
+
+    @Override
+    public <T> List<T> find(T entity, Integer start, Integer limit) {
+        final List<T> entities = getHibernateTemplate().findByExample(entity, start, limit);
+        return entities;
+    }
 }

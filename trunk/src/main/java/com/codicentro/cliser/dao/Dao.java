@@ -87,4 +87,6 @@ public interface Dao {
      * @return
      */
     public <T> List<T> find(DetachedCriteria criteria, Integer start, Integer limit);
+
+    public <T> List<T> find(T entity, Integer start, Integer limit);
 }

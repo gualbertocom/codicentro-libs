@@ -27,8 +27,15 @@ import java.util.StringTokenizer;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+import org.hibernate.type.Type;
+import org.hibernate.util.SerializationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,6 +50,8 @@ public class BL implements Serializable {
     private DBProtocolType dbProtocol = null;
     private String dbVersion = null;
     private DetachedCriteria criteria = null;
+    private ProjectionList projections = null;
+    private String rowCountUniqueProperty = null;
     private Object IU = "";
     private SessionEntityBase sessionEntity = null;
     private String sessionName = null;
@@ -123,8 +132,8 @@ public class BL implements Serializable {
      * @param propertyName
      * @param paramName
      */
-    public void paramEQ(String propertyName, String paramName) throws CDCException {
-        paramEQ(propertyName, paramName, false);
+    public void EQ(String propertyName, String paramName) throws CDCException {
+        EQ(propertyName, paramName, false);
     }
 
     /**
@@ -133,9 +142,9 @@ public class BL implements Serializable {
      * @param paramName
      * @param ignoreCase
      */
-    public void paramEQ(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
+    public void EQ(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
         if (!TypeCast.isNullOrEmpy(paramName)) {
-            paramEQ(ignoreCase, propertyName, form(paramName));
+            EQ(ignoreCase, propertyName, form(paramName));
         }
     }
 
@@ -145,8 +154,8 @@ public class BL implements Serializable {
      * @param value
      * @throws CDCException
      */
-    public void paramEQ(String propertyName, Object value) throws CDCException {
-        paramEQ(false, propertyName, value);
+    public void EQ(String propertyName, Object value) throws CDCException {
+        EQ(false, propertyName, value);
     }
 
     /**
@@ -156,7 +165,7 @@ public class BL implements Serializable {
      * @param value
      * @throws CDCException
      */
-    public void paramEQ(boolean ignoreCase, String propertyName, Object value) throws CDCException {
+    public void EQ(boolean ignoreCase, String propertyName, Object value) throws CDCException {
         if (value != null) {
             if (criteria == null) {
                 criteria = DetachedCriteria.forClass(eClazz);
@@ -180,8 +189,8 @@ public class BL implements Serializable {
      * @param paramName
      * @param define, define like conditions, Values[?%||%?||%?%]
      */
-    public void paramLK(String propertyName, String paramName, String define) throws CDCException {
-        paramLK(propertyName, paramName, define, false);
+    public void LK(String propertyName, String paramName, String define) throws CDCException {
+        LK(propertyName, paramName, define, false);
     }
 
     /**
@@ -191,7 +200,7 @@ public class BL implements Serializable {
      * @param define, define like conditions, Values[?%||%?||%?%]
      * @param ignoreCase
      */
-    public void paramLK(String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
+    public void LK(String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
             if (TypeCast.isNullOrEmpy(param)) {
@@ -216,7 +225,7 @@ public class BL implements Serializable {
         }
     }
 
-    public <T> void paramLK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
+    public <T> void LK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
             if (TypeCast.isNullOrEmpy(param)) {
@@ -243,10 +252,35 @@ public class BL implements Serializable {
 
     /**
      * 
+     * @param propertyName
+     * @throws CDCException
+     */
+    public void GBy(String propertyName) throws CDCException {
+        if (projections == null) {
+            projections = Projections.projectionList();
+        }
+        projections.add(Projections.groupProperty(propertyName));
+    }
+
+    /**
+     * Property for rowCount 
+     * @param propertyName
+     * @throws CDCException
+     */
+    public void RCD(String propertyName) throws CDCException {
+        rowCountUniqueProperty = propertyName;
+    }
+
+    /**
+     * 
      * @throws CDCException
      */
     public void find() throws CDCException {
         responseWrapper.setDataJSON(eClazz, eClazzAlia, findByCriteria());
+    }
+
+    public void find(String hql) throws CDCException {
+        responseWrapper.setDataJSON(eClazz, eClazzAlia, getDao().find(hql));
     }
 
     /**
@@ -256,14 +290,33 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     private <T> List<T> findByCriteria() throws CDCException {
+
         if (getDao() == null) {
             throw new CDCException("cliser.msg.error.dao.notinitialized");
         }
-        if (criteria != null) {
-            return getDao().find(criteria);
-        } else {
-            return getDao().find(eClazz);
+
+        int start = ((integerValue("start") == null) || (integerValue("start").intValue() == 0)) ? -1 : integerValue("start").intValue();
+        int limit = ((integerValue("limit") == null) || (integerValue("limit").intValue() == 0)) ? -1 : integerValue("limit").intValue();
+
+        responseWrapper.setPage(start);
+        responseWrapper.setPageSize(limit);
+
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
         }
+
+        if (projections != null) {
+            criteria.setProjection(projections);
+        }
+        extra();
+        return getDao().find(criteria, start, limit);
+    }
+
+    private <T> void extra() throws CDCException {
+        DetachedCriteria criteriaEx = (DetachedCriteria) SerializationHelper.clone(criteria);
+        criteriaEx.setProjection(((rowCountUniqueProperty == null) ? Projections.rowCount() : Projections.countDistinct(rowCountUniqueProperty)));
+        List<T> md = getDao().find(criteriaEx);
+        responseWrapper.setRowCount(TypeCast.toInt(md.get(0)));
     }
 
     /**
@@ -272,6 +325,14 @@ public class BL implements Serializable {
      */
     public void exclude(String field) {
         responseWrapper.addExclude(field);
+    }
+
+    /**
+     * 
+     * @param field
+     */
+    public void include(String field) {
+        responseWrapper.addInclude(field);
     }
 
     /**

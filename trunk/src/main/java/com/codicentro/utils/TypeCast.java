@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -69,6 +70,12 @@ public class TypeCast {
 
     public static String CompleteString(int ascii, String r, int size, Types.AlignmentType at) {
         return CompleteString(toString(ascii), r, size, at);
+    }
+
+    public static <T> void clone(Object o) {
+      
+
+        //  Object newObject = (String)super
     }
 
     public static boolean ObjectToBoolean(Object obj) throws CDCException {
@@ -503,7 +510,6 @@ public class TypeCast {
         return null;
     }
 
-   
     /**
      * Get Object by name, used reflections for find method
      * @param o

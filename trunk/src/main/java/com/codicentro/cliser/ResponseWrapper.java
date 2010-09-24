@@ -52,6 +52,7 @@ public class ResponseWrapper implements Serializable {
     private PrintWriter writer = null;
     private JSONSerializer dataJSON = null;
     private boolean deepSerializer = false;
+    private List<String> includes = null;
     private List<String> excludes = null;
     private String dateFormat = null;
     private String callback = null;
@@ -65,7 +66,9 @@ public class ResponseWrapper implements Serializable {
         rowCount = -1;
         colCount = -1;
         dataJSON = new JSONSerializer();
+        includes = new ArrayList<String>();
         excludes = new ArrayList<String>();
+        excludes.add("class");
     }
 
     /**
@@ -74,6 +77,14 @@ public class ResponseWrapper implements Serializable {
      */
     public void addExclude(String field) {
         excludes.add(field);
+    }
+
+    /**
+     * 
+     * @param field
+     */
+    public void addInclude(String field) {
+        includes.add(field);
     }
 
     /**
@@ -131,6 +142,7 @@ public class ResponseWrapper implements Serializable {
      */
     private <T> void dataJSON(String eClazzAlia, List<T> pojos) {
         dataJSON.rootName(eClazzAlia);
+        dataJSON.setIncludes(includes);
         dataJSON.setExcludes(excludes);
         dataJSON.transform(new DateTransformer(dateFormat), Date.class);
         if (!pojos.isEmpty()) {
@@ -351,6 +363,8 @@ public class ResponseWrapper implements Serializable {
 
         r = r.replaceAll("ú", "\\\\372");
         r = r.replaceAll("Ú", "\\\\332");
+
+        r = r.replaceAll("¿", "\\\\277");
         return r;
     }
 
