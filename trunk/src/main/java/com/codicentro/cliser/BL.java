@@ -21,6 +21,7 @@ import com.codicentro.utils.Types.DBProtocolType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -370,12 +371,45 @@ public class BL implements Serializable {
         return getDao().persist(entity);
     }
 
+    public <T> T save(Serializable id, Class<T> eClazzJoinTable, T entityJoinTable) throws CDCException {
+        if (eClazz == null) {
+            throw new CDCException("cliser.msg.error.save.entityisnull");
+        }
+        T entity = (T) getDao().get(eClazz, id);
+        Object value = TypeCast.GN(entity, "get" + eClazzJoinTable.getSimpleName() + "List");
+        if (value == null) {
+            value = new ArrayList<T>();
+            ((List) value).add(entityJoinTable);
+        } else {
+            ((List) value).add(entityJoinTable);
+        }
+        return getDao().persist(entity);
+    }
+
     /**
      * 
      * @param id
      */
-    public void remove(Serializable id) {
+    public void remove(Serializable id) throws CDCException {
+        if (eClazz == null) {
+            throw new CDCException("cliser.msg.error.save.entityisnull");
+        }
         getDao().delete(getDao().get(eClazz, id));
+    }
+
+    public <T> void remove(Serializable id, Class<T> eClazzJoinTable, Serializable idJoinTable) throws CDCException {
+        if (eClazz == null) {
+            throw new CDCException("cliser.msg.error.save.entityisnull");
+        }
+        T entity = (T) getDao().get(eClazz, id);
+        Object value = TypeCast.GN(entity, "get" + eClazzJoinTable.getSimpleName() + "List");
+        if (value != null) {
+            T entityJoinTable = (T) getDao().get(eClazzJoinTable, idJoinTable);
+            if (value instanceof List) {
+                log.info("Remove Join Table: " + ((List) value).remove(entityJoinTable));
+                save(entity);
+            }
+        }
     }
 
     /**

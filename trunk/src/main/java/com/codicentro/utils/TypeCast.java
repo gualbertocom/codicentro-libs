@@ -73,8 +73,6 @@ public class TypeCast {
     }
 
     public static <T> void clone(Object o) {
-      
-
         //  Object newObject = (String)super
     }
 
@@ -516,12 +514,26 @@ public class TypeCast {
      * @param n
      * @return
      */
-    public static Object GN(Object o, String n) {
+    public static Object GN(Object o, String n) throws CDCException {
         Method m = getMethod(o.getClass(), n, null);
         if (m != null) {
             return invoke(m, o, null);
         } else {
-            return null;
+            throw new CDCException("cliser.msg.error.remove.jointable.methodcannotbefound");
+        }
+    }
+    /**
+     * Set Object by name, used reflections for find method
+     * @param o, Object
+     * @param n, Method name     
+     * @throws CDCException
+     */
+    public static void SN(Object o, String n,Object value) throws CDCException {
+        Method m = getMethod(o.getClass(), n, null);
+        if (m != null) {
+            invoke(m, o, value);
+        } else {
+            throw new CDCException("cliser.msg.error.remove.jointable.methodcannotbefound");
         }
     }
 
@@ -529,10 +541,10 @@ public class TypeCast {
      * 
      * @param c, Class name
      * @param n, Public method name
-     * @param p, 
+     * @param p, Parameters, set null for optional param
      * @return
      */
-    public static Method getMethod(Class c, String n, Class p) {
+    public static Method getMethod(Class c, String n, Class p) throws CDCException {
         try {
             if (p == null) {
                 return c.getMethod(n);
@@ -540,7 +552,7 @@ public class TypeCast {
                 return c.getMethod(n, p);
             }
         } catch (Exception ex) {
-            return null;
+            throw new CDCException(ex);
         }
     }
 
@@ -548,10 +560,10 @@ public class TypeCast {
      * 
      * @param m
      * @param o
-     * @param p
+     * @param p, Parameters, set null for optional param
      * @return
      */
-    public static Object invoke(Method m, Object o, Object p) {
+    public static Object invoke(Method m, Object o, Object p) throws CDCException {
         try {
             if (p == null) {
                 return m.invoke(o);
@@ -559,7 +571,7 @@ public class TypeCast {
                 return m.invoke(o, p);
             }
         } catch (Exception ex) {
-            return null;
+            throw new CDCException(ex);
         }
     }
 }
