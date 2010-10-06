@@ -28,14 +28,11 @@ import java.util.StringTokenizer;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
-import org.hibernate.type.Type;
 import org.hibernate.util.SerializationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,6 +223,40 @@ public class BL implements Serializable {
         }
     }
 
+    /**
+     * Apply case-insensitive an "like or" constraint to the named property when ignoreCase is true
+     * @param lhsPropertyName
+     * @param rhsPropertyName
+     * @param paramName
+     * @param define
+     * @param ignoreCase
+     * @throws CDCException
+     */
+    public void LKo(String lhsPropertyName, String rhsPropertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
+        if (paramName != null) {
+            String param = paramString(paramName);
+            if (TypeCast.isNullOrEmpy(param)) {
+                return;
+            }
+            if (TypeCast.isNullOrEmpy(define)
+                    || ((define.indexOf("?%") == -1)
+                    && (define.indexOf("%?") == -1)
+                    && (define.indexOf("%?%") == -1))) {
+                throw new CDCException("cliser.msg.error.criteria.like.baddefined");
+            } else {
+                param = define.replaceAll("\\?", param);
+            }
+            if (criteria == null) {
+                criteria = DetachedCriteria.forClass(eClazz);
+            }
+            if (ignoreCase) {
+                criteria.add(Restrictions.or(Restrictions.like(lhsPropertyName, param).ignoreCase(), Restrictions.like(rhsPropertyName, param).ignoreCase()));
+            } else {
+                criteria.add(Restrictions.or(Restrictions.like(lhsPropertyName, param), Restrictions.like(rhsPropertyName, param)));
+            }
+        }
+    }
+
     public <T> void LK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
@@ -261,6 +292,28 @@ public class BL implements Serializable {
             projections = Projections.projectionList();
         }
         projections.add(Projections.groupProperty(propertyName));
+    }
+
+    /**
+     * Ascending order
+     * @param propertyName
+     */
+    public void OByAsc(String propertyName) {
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
+        }
+        criteria.addOrder(Order.asc(propertyName));
+    }
+
+    /**
+     * Descending order
+     * @param propertyName
+     */
+    public void OByDesc(String propertyName) {
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
+        }
+        criteria.addOrder(Order.desc(propertyName));
     }
 
     /**

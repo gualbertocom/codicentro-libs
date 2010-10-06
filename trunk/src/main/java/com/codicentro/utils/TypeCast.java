@@ -149,12 +149,38 @@ public class TypeCast {
         return result;
     }
 
-    public static BigInteger toBigInteger(Object o) {
+    /**
+     * 
+     * @param o
+     * @return
+     */
+    public static BigInteger toBigInteger(Object o) throws CDCException {
+        BigInteger rs = null;
         try {
-            return new BigInteger(toString(o));
-        } catch (Exception e) {
-            return null;
+            String value = toString(o);
+            if (value != null) {
+                rs = new BigInteger(value.trim());
+            }
+        } catch (Exception ex) {
         }
+        return rs;
+    }
+
+    /**
+     * 
+     * @param o
+     * @return
+     */
+    public static BigDecimal toBigDecimal(Object o) {
+        BigDecimal rs = null;
+        try {
+            String value = toString(o);
+            if (value != null) {
+                rs = new BigDecimal(value.trim());
+            }
+        } catch (Exception ex) {
+        }
+        return rs;
     }
 
     public static Long toLong(Object o) {
@@ -280,17 +306,9 @@ public class TypeCast {
         return (((o == null) || (o.equals(""))) ? r : o);
     }
 
-    public static BigDecimal toBigDecimal(Object o) {
-        try {
-            return new BigDecimal(toString(o));
-        } catch (Exception e) {
-            return null;
-        }
-    }
     /*
      *
      */
-
     public static java.sql.Date toDate(Object o, String f) throws CDCException {
         java.sql.Date sqlDate = null;
         try {
@@ -522,13 +540,14 @@ public class TypeCast {
             throw new CDCException("cliser.msg.error.remove.jointable.methodcannotbefound");
         }
     }
+
     /**
      * Set Object by name, used reflections for find method
      * @param o, Object
      * @param n, Method name     
      * @throws CDCException
      */
-    public static void SN(Object o, String n,Object value) throws CDCException {
+    public static void SN(Object o, String n, Object value) throws CDCException {
         Method m = getMethod(o.getClass(), n, null);
         if (m != null) {
             invoke(m, o, value);

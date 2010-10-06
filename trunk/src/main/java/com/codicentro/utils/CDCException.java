@@ -65,6 +65,17 @@ public class CDCException extends Exception implements Serializable {
         }
     }
 
+    public CDCException(String frontEndMessage, Exception e) {
+        super(e);
+        this.frontEndMessage = frontEndMessage;
+        backEndMessage = (e.getCause() != null) ? e.getCause().toString() : null;
+        if (e instanceof SQLException) {
+            errorCode = ((SQLException) e).getErrorCode();
+        } else {
+            errorCode = -1;
+        }
+    }
+
     /**
      *
      * @return
