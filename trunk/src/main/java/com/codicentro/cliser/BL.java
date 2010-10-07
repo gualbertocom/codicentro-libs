@@ -395,7 +395,7 @@ public class BL implements Serializable {
      * @param alias
      */
     public void alias(String field, String alias) {
-        responseWrapper.getJSON().include(field).rootName(alias); //include(field).rootName(alias);
+        responseWrapper.setAlias(field, alias);
     }
 
     /**

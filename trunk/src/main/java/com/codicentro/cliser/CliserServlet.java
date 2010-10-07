@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,8 @@ public class CliserServlet extends HttpServlet {
     private WebApplicationContext wac = null;
     private String dateFormat = null;
     private String callback = null;
+    private Map<String, String> mBLs = null;
+    private StringBuilder errBuf = null;
 
     /**
      * 
@@ -83,10 +87,51 @@ public class CliserServlet extends HttpServlet {
                 log.warn("Web application context Spring is not initialize.");
             }
             log.info("Web application context -> " + wac.getId());
-            log.info("*************************");
-            log.info("* Bean definition names *");
-            log.info("*************************");
-            log.info(TypeCast.toString(wac.getBeanDefinitionNames(), ", "));
+            errBuf = new StringBuilder();
+            errBuf.append("\n*************************\n");
+            errBuf.append("* Bean definition names *\n");
+            errBuf.append("*************************\n");
+            errBuf.append(TypeCast.toString(wac.getBeanDefinitionNames(), ", ")).append("\n");
+            log.info(errBuf.toString());
+            errBuf = new StringBuilder();
+
+            errBuf.append("\n******************\n");
+            errBuf.append("* Business logic *\n");
+            errBuf.append("******************\n");
+            mBLs = new HashMap<String, String>();
+            Iterator iRootBLs = fConfig.getChildren("business-logic").iterator();
+            String name = null;
+            String schema = null;
+            String rootPackage = null;
+            String blPackage = null;
+            String idBL = null;
+            String className = null;
+            Element eRootBL = null;
+            Element eBL = null;           
+            Iterator iBLs = null;
+            while (iRootBLs.hasNext()) {
+                eRootBL = (Element) iRootBLs.next();
+                rootPackage = ((eRootBL.getAttribute("package") != null) ? eRootBL.getAttribute("package").getValue() : null);
+                iBLs = eRootBL.getChildren().iterator();
+                errBuf.append("Root package: ").append(rootPackage).append("\n");
+                while (iBLs.hasNext()) {
+                    eBL = (Element) iBLs.next();
+                    blPackage = ((eBL.getAttribute("package") != null) ? eBL.getAttribute("package").getValue() : null);
+                    schema = ((eBL.getAttribute("schema") != null) ? eBL.getAttribute("schema").getValue() : null);
+                    name = ((eBL.getValue() != null) ? eBL.getValue() : "");
+                    idBL = ((schema != null) ? schema : "") + name;
+                    className = ((blPackage != null) ? blPackage + "." : ((rootPackage != null) ? rootPackage + "." : "")) + idBL + "BL";
+                    errBuf.append("ID: ").append(idBL);
+                    errBuf.append((blPackage != null) ? ", Package: " + blPackage : "");
+                    errBuf.append(", Name: ").append(className).append("\n");
+                    if (mBLs.containsKey(idBL)) {
+                        log.error("Error: Duplicate business logic " + idBL + ".");
+                        throw new CDCException("Error: Duplicate business logic " + idBL + ".");
+                    }
+                    mBLs.put(idBL, className);
+                }
+            }
+            log.info(errBuf.toString());
             log.info("Cliser is started...");
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
@@ -119,50 +164,23 @@ public class CliserServlet extends HttpServlet {
 
     /**
      * 
-     * @param servletPath
-     * @param sch
-     * @return
-     * @throws CDCException
-     */
-    private Element initBusinessLogic(String servletPath, String sch) throws CDCException {
-        Iterator iBLs = fConfig.getChildren("business-logic").iterator();
-        Element eBL = null;
-        boolean noExist = true;
-        String name = null;
-        String schema = null;
-        String idBL = null;
-        sch = (sch == null) ? "public" : sch;
-        while ((iBLs.hasNext()) && (noExist)) {
-            eBL = (Element) iBLs.next();
-            name = ((eBL.getAttribute("name") != null) ? eBL.getAttribute("name").getValue() : "");
-            schema = ((eBL.getAttribute("schema") != null) ? eBL.getAttribute("schema").getValue() : "public");
-            idBL = "/" + name + ".cs";
-            noExist = !(idBL.equals(servletPath) && schema.equals(sch));
-        }
-        log.info("Id business logic -> " + idBL);
-        log.info("Schema -> " + schema);
-        if (noExist) {
-            throw new CDCException("Business logic \"" + servletPath + "\" and/or schema " + sch + " not found.");
-        }
-        return eBL;
-    }
-
-    /**
-     * 
      * @param request
      * @param response
      * @throws IOException
      */
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idBL = null;
         String className = null;
         String methodName = null;
         rw = null;
         try {
             callback = request.getParameter("callback");
-            Element eBL = initBusinessLogic(request.getServletPath(), request.getParameter("schema"));
-            className = eBL.getAttribute("package").getValue() + "." + eBL.getAttribute("name").getValue() + "BL";
-            BL _cliser = (BL) Class.forName(className).newInstance();
-            log.info("Hash param -> " + request.getParameterNames());
+            idBL = request.getServletPath().replaceAll(".cs", "").replaceFirst("/", "");
+            if (!mBLs.containsKey(idBL)) {              
+                throw new CDCException("Business logic " + idBL + " not found.");
+            }
+            className = mBLs.get(idBL);
+            BL _cliser = (BL) Class.forName(className).newInstance();        
             _cliser.setResquestWrapper(request);
             _cliser.setResponseWrapper(response);
             _cliser.setDao(wac.getBean(BL.class).getDao());
@@ -171,7 +189,7 @@ public class CliserServlet extends HttpServlet {
             _cliser.setDBVersion(dbVersion);
             _cliser.setSessionName(sessionName);
             methodName = TypeCast.toString(_cliser.form(controllerParamName));
-            if (methodName == null) {
+            if (methodName == null) {              
                 throw new CDCException("Could not find the controller for the parameter name \"" + controllerParamName + "\".");
             }
             Method _method = _cliser.getClass().getMethod(methodName);

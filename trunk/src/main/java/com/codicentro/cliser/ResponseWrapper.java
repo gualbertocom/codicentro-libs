@@ -26,6 +26,7 @@ import flexjson.JSONSerializer;
 import flexjson.transformer.DateTransformer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class ResponseWrapper implements Serializable {
     private List<String> excludes = null;
     private String dateFormat = null;
     private String callback = null;
+    private Map<String, String> mAlias = null;
 
     public ResponseWrapper(HttpServletResponse response, String callback) {
         this.response = response;
@@ -68,7 +70,8 @@ public class ResponseWrapper implements Serializable {
         dataJSON = new JSONSerializer();
         includes = new ArrayList<String>();
         excludes = new ArrayList<String>();
-        excludes.add("class");
+        excludes.add("*");
+        mAlias = new HashMap<String, String>();
     }
 
     /**
@@ -85,6 +88,15 @@ public class ResponseWrapper implements Serializable {
      */
     public void addInclude(String field) {
         includes.add(field);
+    }
+
+    public void addInclude(String field, String alias) {
+        addExclude(field);
+        mAlias.put(field, alias);
+    }
+
+    public void setAlias(String field, String alias) {        
+        mAlias.put(field, alias);
     }
 
     /**
@@ -145,6 +157,7 @@ public class ResponseWrapper implements Serializable {
         dataJSON.setIncludes(includes);
         dataJSON.setExcludes(excludes);
         dataJSON.transform(new DateTransformer(dateFormat), Date.class);
+        dataJSON.setAlias(mAlias);
         if (!pojos.isEmpty()) {
             StringBuilder out = new StringBuilder();
             if (deepSerializer) {
