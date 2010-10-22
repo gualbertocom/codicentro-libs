@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class TypeCast {
@@ -533,7 +534,7 @@ public class TypeCast {
      * @return
      */
     public static Object GN(Object o, String n) throws CDCException {
-        Method m = getMethod(o.getClass(), n, null);
+        Method m = getMethod(o.getClass(), n);
         if (m != null) {
             return invoke(m, o, null);
         } else {
@@ -548,7 +549,7 @@ public class TypeCast {
      * @throws CDCException
      */
     public static void SN(Object o, String n, Object value) throws CDCException {
-        Method m = getMethod(o.getClass(), n, null);
+        Method m = getMethod(o.getClass(), n);
         if (m != null) {
             invoke(m, o, value);
         } else {
@@ -560,15 +561,15 @@ public class TypeCast {
      * 
      * @param c, Class name
      * @param n, Public method name
-     * @param p, Parameters, set null for optional param
+     * @param parameterTypes,
      * @return
      */
-    public static Method getMethod(Class c, String n, Class p) throws CDCException {
+    public static Method getMethod(Class c, String n, Class<?>... parameterTypes) throws CDCException {
         try {
-            if (p == null) {
+            if (parameterTypes == null) {
                 return c.getMethod(n);
             } else {
-                return c.getMethod(n, p);
+                return c.getMethod(n, parameterTypes);
             }
         } catch (Exception ex) {
             throw new CDCException(ex);
@@ -593,4 +594,20 @@ public class TypeCast {
             throw new CDCException(ex);
         }
     }
+
+    public static Object invoke(Object o, String m, Object... args) throws CDCException {
+        try {
+            if (args != null) {
+                Class[] parameterTypes = new Class[args.length];
+                for (int i = 0; i < args.length; i++) {
+                    parameterTypes[i] = args[i].getClass();
+                }
+                return o.getClass().getMethod(m, parameterTypes).invoke(o, args);
+            } else {
+                return o.getClass().getMethod(m).invoke(o);
+            }
+        } catch (Exception ex) {
+            throw new CDCException(ex);
+        }
+    }  
 }
