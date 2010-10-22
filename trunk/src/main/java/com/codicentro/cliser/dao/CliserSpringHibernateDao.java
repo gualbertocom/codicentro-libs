@@ -7,6 +7,8 @@ package com.codicentro.cliser.dao;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.Resource;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.slf4j.Logger;
 import org.springframework.orm.hibernate3.HibernateTemplate;
@@ -20,9 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @author avillalobos
  */
 @Repository
-public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
+public class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
 
-    private Logger log = org.slf4j.LoggerFactory.getLogger(SpringHibernateDao.class);
+    private Logger log = org.slf4j.LoggerFactory.getLogger(CliserSpringHibernateDao.class);
 
     @Resource(name = "hibernateTemplate")
     public void setTemplate(HibernateTemplate hibernateTemplate) {
@@ -31,13 +33,13 @@ public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public <T> void delete(T entity) {
+    public <TEntity> void delete(TEntity entity) {
         getHibernateTemplate().delete(entity);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public <T> T persist(T entity) {
+    public <TEntity> TEntity persist(TEntity entity) {
         getHibernateTemplate().saveOrUpdate(entity);
         return entity;
     }
@@ -52,47 +54,56 @@ public class SpringHibernateDao extends HibernateDaoSupport implements Dao {
 
     @Transactional(readOnly = true)
     @Override
-    public <T> List<T> find(Class<T> entityClass) {
-        final List<T> entities = getHibernateTemplate().loadAll(entityClass);
+    public <TEntity> List<TEntity> find(Class<TEntity> entityClass) {
+        final List<TEntity> entities = getHibernateTemplate().loadAll(entityClass);
         return entities;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public <T> T load(Class<T> entityClass, Serializable id) {
-        final T entity = (T) getHibernateTemplate().load(entityClass, id);
+    public <TEntity> TEntity load(Class<TEntity> entityClass, Serializable id) {
+        final TEntity entity = (TEntity) getHibernateTemplate().load(entityClass, id);
         return entity;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public <T> T get(Class<T> entityClass, Serializable id) {
-        final T entity = (T) getHibernateTemplate().get(entityClass, id);
+    public <TEntity> TEntity get(Class<TEntity> entityClass, Serializable id) {
+        final TEntity entity = (TEntity) getHibernateTemplate().get(entityClass, id);
         return entity;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public <T> List<T> find(String hql) {
-        final List<T> entities = getHibernateTemplate().find(hql);
+    public <TEntity> List<TEntity> find(String hql) {
+        final List<TEntity> entities = getHibernateTemplate().find(hql);
         return entities;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public <T> List<T> find(DetachedCriteria criteria, Integer start, Integer limit) {
-        final List<T> entities = getHibernateTemplate().findByCriteria(criteria, start, limit);
+    public <TEntity> List<TEntity> find(DetachedCriteria criteria, Integer start, Integer limit) {
+        final List<TEntity> entities = getHibernateTemplate().findByCriteria(criteria, start, limit);
         return entities;
     }
 
     @Override
-    public <T> List<T> find(DetachedCriteria criteria) {
+    public <TEntity> List<TEntity> find(DetachedCriteria criteria) {
         return find(criteria, -1, -1);
     }
 
     @Override
-    public <T> List<T> find(T entity, Integer start, Integer limit) {
-        final List<T> entities = getHibernateTemplate().findByExample(entity, start, limit);
+    public <TEntity> List<TEntity> find(TEntity entity, Integer start, Integer limit) {
+        final List<TEntity> entities = getHibernateTemplate().findByExample(entity, start, limit);
+        return entities;
+    }
+
+    @Override
+    public <TEntity> List<TEntity> find(StringBuilder sql) {
+        Session session = getSessionFactory().openSession();
+        SQLQuery query = session.createSQLQuery(sql.toString());
+        final List<TEntity> entities = query.list();
+        session.close();
         return entities;
     }
 }

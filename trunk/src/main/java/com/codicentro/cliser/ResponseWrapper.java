@@ -95,7 +95,7 @@ public class ResponseWrapper implements Serializable {
         mAlias.put(field, alias);
     }
 
-    public void setAlias(String field, String alias) {        
+    public void setAlias(String field, String alias) {
         mAlias.put(field, alias);
     }
 
@@ -117,42 +117,42 @@ public class ResponseWrapper implements Serializable {
 
     /**
      *
-     * @param <T>
+     * @param <TEntity>
      * @param pojos
      */
-    public <T> void setDataJSON(List<T> pojos) {
+    public <TEntity> void setDataJSON(List<TEntity> pojos) {
         dataJSON(null, pojos);
     }
 
     /**
      * 
-     * @param <T>
+     * @param <TEntity>
      * @param eClazz
      * @param pojos
      */
-    public <T> void setDataJSON(Class<T> eClazz, List<T> pojos) {
+    public <TEntity> void setDataJSON(Class<TEntity> eClazz, List<TEntity> pojos) {
         setDataJSON(eClazz, null, pojos);
     }
 
     /**
      *
-     * @param <T>
+     * @param <TEntity>
      * @param eClazz
      * @param eClazzAlia
      * @param pojos
      */
-    public <T> void setDataJSON(Class<T> eClazz, String eClazzAlia, List<T> pojos) {
+    public <TEntity> void setDataJSON(Class<TEntity> eClazz, String eClazzAlia, List<TEntity> pojos) {
         eClazzAlia = (eClazzAlia == null) ? eClazz.getSimpleName() : eClazzAlia;
         dataJSON(eClazzAlia, pojos);
     }
 
     /**
      * 
-     * @param <T>
+     * @param <TEntity>
      * @param eClazzAlia
      * @param pojos
      */
-    private <T> void dataJSON(String eClazzAlia, List<T> pojos) {
+    private <TEntity> void dataJSON(String eClazzAlia, List<TEntity> pojos) {
         dataJSON.rootName(eClazzAlia);
         dataJSON.setIncludes(includes);
         dataJSON.setExcludes(excludes);
@@ -221,12 +221,20 @@ public class ResponseWrapper implements Serializable {
         this.page = page;
     }
 
+    public int getPage() {
+        return page;
+    }
+
     /**
      * 
      * @param pageSize
      */
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public int getPageSize() {
+        return pageSize;
     }
 
     /**
