@@ -674,7 +674,7 @@ public class Table implements Serializable {
      * @return
      */
     public boolean getBooleanValue(int index, String key) throws CDCException {
-        return TypeCast.ObjectToBoolean(getValue(index, key));
+        return TypeCast.toBoolean(getValue(index, key));
     }
 
     /**

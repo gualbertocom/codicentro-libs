@@ -52,6 +52,7 @@ public class CliserServlet extends HttpServlet {
     private String callback = null;
     private Map<String, String> mBLs = null;
     private StringBuilder errBuf = null;
+    private String IU = "getIU";
 
     /**
      * 
@@ -68,20 +69,30 @@ public class CliserServlet extends HttpServlet {
             Document doc = builder.build(new File(getServletContext().getRealPath("") + cliserConfig));
             fConfig = doc.getRootElement();
             Element eI = fConfig.getChild("cliser-init");
+            /*** CONTROLLER PARAM NAME ***/
             Element e = eI.getChild("controller-param-name");
             controllerParamName = TypeCast.toString(((e != null) ? e.getValue() : ""));
             log.info("Controller param name is -> " + controllerParamName);
+            /*** SESSION NAME ***/
             e = eI.getChild("session-name");
             sessionName = TypeCast.toString(((e != null) ? e.getValue() : ""));
             log.info("Sessiomn name is -> " + sessionName);
+            /*** IU NAME ***/
+            e = eI.getChild("iu");
+            IU = TypeCast.toString(((e != null) ? e.getValue() : ""));
+            log.info("IU Identifier is -> " + IU);
+            /*** DATA BASE PROTOCOL ***/
             e = eI.getChild("db-protocol");
             dbProtocol = DBProtocolType.valueOf(TypeCast.toString(((e != null) ? e.getValue() : "")));
             log.info("Data base protocol is -> " + dbProtocol);
+            /*** DATA BASE VERSION ***/
             dbVersion = e.getAttribute("version").getValue();
             log.info("Data base version is -> " + dbVersion);
+            /*** DEFAULT DATE FORMAT ***/
             e = eI.getChild("date-format");
             dateFormat = (e == null) ? "dd/mm/yyyy" : e.getValue();
             log.info("Date format -> " + dateFormat);
+            /*** WEB APPLICATION CONTEXT ***/
             wac = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
             if (wac == null) {
                 log.warn("Web application context Spring is not initialize.");
@@ -107,7 +118,7 @@ public class CliserServlet extends HttpServlet {
             String idBL = null;
             String className = null;
             Element eRootBL = null;
-            Element eBL = null;           
+            Element eBL = null;
             Iterator iBLs = null;
             while (iRootBLs.hasNext()) {
                 eRootBL = (Element) iRootBLs.next();
@@ -176,20 +187,21 @@ public class CliserServlet extends HttpServlet {
         try {
             callback = request.getParameter("callback");
             idBL = request.getServletPath().replaceAll(".cs", "").replaceFirst("/", "");
-            if (!mBLs.containsKey(idBL)) {              
+            if (!mBLs.containsKey(idBL)) {
                 throw new CDCException("Business logic " + idBL + " not found.");
             }
             className = mBLs.get(idBL);
-            BL _cliser = (BL) Class.forName(className).newInstance();        
+            BL _cliser = (BL) Class.forName(className).newInstance();
             _cliser.setResquestWrapper(request);
             _cliser.setResponseWrapper(response);
-            _cliser.setWac(wac);            
+            _cliser.setWac(wac);
             _cliser.setDBProtocol(dbProtocol);
             _cliser.setDateFormat(dateFormat);
             _cliser.setDBVersion(dbVersion);
             _cliser.setSessionName(sessionName);
+            _cliser.setNameIU(IU);
             methodName = TypeCast.toString(_cliser.form(controllerParamName));
-            if (methodName == null) {              
+            if (methodName == null) {
                 throw new CDCException("Could not find the controller for the parameter name \"" + controllerParamName + "\".");
             }
             Method _method = _cliser.getClass().getMethod(methodName);

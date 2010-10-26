@@ -256,11 +256,9 @@ public class ResponseWrapper implements Serializable {
      * @param e
      */
     public void setMessage(Exception e) {
-        String msg = e.getMessage();
+        String msg = e.getLocalizedMessage();
         if ((msg != null) && (msg.indexOf("CDCError:") != -1)) {
             msg = msg.substring(msg.indexOf("CDCError:") + 9);
-        } else {
-            msg = (e.getCause() == null) ? e.getMessage() : e.getCause().getMessage();
         }
         setMessage(msg, false);
     }

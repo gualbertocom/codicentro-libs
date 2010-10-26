@@ -19,13 +19,13 @@ import com.codicentro.model.Table;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class TypeCast {
@@ -37,6 +37,37 @@ public class TypeCast {
      */
     public static boolean isNullOrEmpy(String s) {
         return ((s == null) || (s.trim().equals("")));
+    }
+
+    /**
+     * Remplaza el valor s por r en caso de que se cumpla la condicion.
+     * @param s, Valor
+     * @param r, Remplazo
+     * @return
+     */
+    public static String rplNullOrEmpty(String s, String r) {
+        if (isNullOrEmpy(s)) {
+            return r;
+        } else {
+            return s;
+        }
+    }
+
+    public static Object ifNull(Object o, Object r) {
+        return ((o == null) ? r : o);
+    }
+
+    public static boolean isNull(Object o) {
+        return o == null ? true : false;
+    }
+
+    public static boolean isNotNull(Object o) {
+        return !isNull(o);
+    }
+
+    public static boolean isNullOrEmpy(String s, String v) {
+        s = (s != null) ? s.replaceAll(v, "") : s;
+        return isNullOrEmpy(s);
     }
 
     /**
@@ -77,7 +108,7 @@ public class TypeCast {
         //  Object newObject = (String)super
     }
 
-    public static boolean ObjectToBoolean(Object obj) throws CDCException {
+    public static boolean toBoolean(Object obj) throws CDCException {
         String s = toString(obj);
         if (s != null) {
             s = s.trim().toUpperCase();
@@ -323,43 +354,35 @@ public class TypeCast {
         }
         return sqlDate;
     }
-    /*
-    public static java.sql.Date ObjectToDate(Object o) throws CDCException {
-    return new java.util.Date();
-    // return (((o == null) || (NVL(ObjectToString(o), "", true).equals("")) || (NVL(ObjectToString(o), "").equals("-1"))) ? null : java.sql.Date.valueOf(ObjectToString(o)));
-    }
-     */
 
-    public static String StringtoBlanc(String o) {
+    public static String toBlanc(String o) {
         return (((o == null) || (o.equals("-1"))) ? "" : o);
     }
 
-    public static BigDecimal ObjectToBigDecimalOrNull(Object o) throws CDCException {
+    public static BigDecimal toBigDecimalOrNull(Object o) throws CDCException {
         if ((o == null) || (o.equals(""))) {
             return null;
         }
         return new BigDecimal(toString(o));
     }
-    /*
-    public static java.sql.Date stringToDate(String fecha) throws ParseException {
-    return stringToDate(fecha, "yyyyMMdd");
-    }
 
-    public static java.sql.Date stringToDate(String fecha, String formato) throws ParseException {
-    java.util.Date utilDate = null;
-    java.sql.Date sqlDate = null;
-
-    SimpleDateFormat df = new SimpleDateFormat(formato.trim());
-    df.setLenient(false);
-
-    utilDate = df.parse(fecha);
-    sqlDate = new java.sql.Date(utilDate.getTime());
-
-    return sqlDate;
-    }
+    /**
+     *
+     * @param d, Date
+     * @param f, Date format
+     * @return
      */
+    public static String toString(Date d, String f) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat(f.trim());
+            df.setLenient(false); // Force read format date into param f
+            return df.format(d);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    public static Calendar dateToCalendar(int date) {
+    public static Calendar toCalendar(int date) {
         int day = date % 100;
         int month = date / 100 % 100 - 1;
         int year = date / 10000;
@@ -368,7 +391,7 @@ public class TypeCast {
         return cal;
     }
 
-    public static int calendarToDate(Calendar cal) {
+    public static int toDate(Calendar cal) {
         int day = cal.get(5);
         int month = cal.get(2) + 1;
         int year = cal.get(1);
@@ -421,7 +444,7 @@ public class TypeCast {
         return rs.toArray();
     }
 
-    public static ArrayList tableToJSON(Table table) throws com.codicentro.utils.CDCException {
+    public static ArrayList toJSON(Table table) throws com.codicentro.utils.CDCException {
         ArrayList nt = new ArrayList();
         try {
             if (table != null) {
@@ -533,7 +556,7 @@ public class TypeCast {
      * @param n
      * @return
      */
-    public static Object GN(Object o, String n) throws CDCException {
+    public static Object GN(Object o, String n) throws CDCException, CDCException, CDCException {
         Method m = getMethod(o.getClass(), n);
         if (m != null) {
             return invoke(m, o, null);
@@ -609,5 +632,95 @@ public class TypeCast {
         } catch (Exception ex) {
             throw new CDCException(ex);
         }
-    }  
+    }
+
+    public static char toChar(String s) {
+        s = (isNullOrEmpy(s)) ? " " : s;
+        return s.charAt(0);
+    }
+
+    public static Method getMethod(Class c, String n, Class p) {
+        try {
+            if (p == null) {
+                return c.getMethod(n);
+            } else {
+                return c.getMethod(n, p);
+            }
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public static String toString(BigDecimal n, String f) {
+        try {
+            DecimalFormat df = new DecimalFormat(f.trim());
+            return df.format(n);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param n, Value
+     * @param f, Format
+     * @param r, Replace value when is null
+     * @return
+     */
+    public static String toString(BigDecimal n, String f, String r) {
+        String rs = toString(n, f);
+        if (isNullOrEmpy(rs)) {
+            return r;
+        } else {
+            return rs;
+        }
+    }
+
+    /**
+     * @param n, value numeric
+     * @param f, numeric format
+     * @param d, default value when n is null
+     */
+    public static String toString(BigDecimal n, String f, BigDecimal d) {
+        try {
+            String rs = toString(n, f);
+            return ((rs == null) ? toString(d, f) : rs);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean isNumber(Object o) {
+        try {
+            Double.parseDouble(toString(o));
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public static Date toDate(Date d, String f) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat(f.trim());
+            df.setLenient(false); // Force read format date into param f
+            return df.parse(toString(d, f));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String toSoutFormat(String s) {
+        String sf = "";
+        for (int i = 0; i < s.length() + 4; i++) {
+            sf += "*";
+        }
+        return sf + "\n" + "* " + s + " *\n" + sf + "\n";
+    }
+
+    public static String repeat(String v, int size) {
+        for (int i = 0; i < size; i++) {
+            v += v;
+        }
+        return v;
+    }
 }

@@ -14,7 +14,6 @@
 package com.codicentro.cliser;
 
 import com.codicentro.cliser.dao.CliserDao;
-import com.codicentro.security.SessionEntityBase;
 import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
@@ -22,6 +21,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,13 +51,19 @@ public class BL implements Serializable {
     private DetachedCriteria criteria = null;
     private ProjectionList projections = null;
     private String rowCountUniqueProperty = null;
-    private Object IU = "";
-    private SessionEntityBase sessionEntity = null;
-    /*** SERVICE CLASS ***/
-    private Class bClazz = null;
+    /*** Identifier IU ***/
+    private String nameIU = null;
+    private Object IU = null;
+    //private String
+    //private Object sessionEntity = null;
+    /*** SERVICE ***/
+    private Class srvClazz = null;
+    private String srvName = null;
+    private String srvMethodName = null;
+    private List<Object> srvParams = null;
     private String sessionName = null;
     private WebApplicationContext wac = null;
-    /*** ENTITY CLASS ***/
+    /*** ENTITY ***/
     private Class eClazz = null;
     private String eClazzAlia = null;
     private Object oEntity = null;
@@ -69,13 +75,19 @@ public class BL implements Serializable {
      *
      * @throws CDCException
      */
-    public void checkSession() throws CDCException {
+    public <TSessionEntity> void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
-            //throw new CDCException("lng.msg.error.sessionexpired");
-            newSession(new SessionEntityBase("avillalobos"));
+            throw new CDCException("lng.msg.error.sessionexpired");
         }
-        sessionEntity = (SessionEntityBase) requestWrapper.getSession().getAttribute(sessionName);
-        IU = sessionEntity.getIU();
+        IU = invoke(session(), nameIU);
+    }
+
+    public <TSessionEntity> TSessionEntity session() {
+        return (TSessionEntity) requestWrapper.getSession().getAttribute(sessionName);
+    }
+
+    public Object session(String propertyName) throws CDCException {
+        return invoke(requestWrapper.getSession().getAttribute(sessionName), propertyName);
     }
 
     /**
@@ -109,22 +121,36 @@ public class BL implements Serializable {
     /**
      * 
      * @param <TBean>
-     * @param bClazz
+     * @param srvClazz
      */
-    public <TBean> void service(Class<TBean> bClazz) {
-        this.bClazz = bClazz;
+    public <TBean> void service(Class<TBean> srvClazz) {
+        this.srvClazz = srvClazz;
+    }
+
+    public <TBean> void service(String srvMethodName, Class<TBean> srvClazz) {
+        this.srvClazz = srvClazz;
+        this.srvMethodName = srvMethodName;
+    }
+
+    public <TBean> void service(Class<TBean> srvClazz, String srvName) {
+        this.srvClazz = srvClazz;
+        this.srvName = srvName;
+    }
+
+    public <TBean> void service(String srvName) {
+        this.srvName = srvName;
     }
 
     /**
      * 
      * @param <TBean>
      * @param <TEntity>
-     * @param bClazz
+     * @param srvClazz
      * @param eClazz
      * @param eClazzAlia
      */
-    public <TBean, TEntity> void service(Class<TBean> bClazz, Class<TEntity> eClazz, String eClazzAlia) {
-        this.bClazz = bClazz;
+    public <TBean, TEntity> void service(Class<TBean> srvClazz, Class<TEntity> eClazz, String eClazzAlia) {
+        this.srvClazz = srvClazz;
         entity(eClazz, eClazzAlia);
     }
 
@@ -373,6 +399,35 @@ public class BL implements Serializable {
         criteria.createCriteria(associationPath, alias, DetachedCriteria.INNER_JOIN);
     }
 
+    public void IN(String propertyName, Object[] values) throws CDCException {
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
+        }
+        try {
+            criteria.add(Restrictions.in(propertyName, values));
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            throw new CDCException(ex);
+        }
+
+    }
+
+    public void IN(String propertyName, Collection values) throws CDCException {
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
+        }
+        try {
+            if ((values == null) || (values.isEmpty())) {
+                criteria.add(Restrictions.isNull(propertyName));
+            } else {
+                criteria.add(Restrictions.in(propertyName, values));
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            throw new CDCException(ex);
+        }
+    }
+
     /**
      * A grouping property value
      * @param propertyName
@@ -454,6 +509,28 @@ public class BL implements Serializable {
     }
 
     /**
+     * Add params for service call
+     * @param o
+     */
+    public void param(Object o) {
+        if (o == null) {
+            return;
+        }
+        if (srvParams == null) {
+            srvParams = new ArrayList<Object>();
+        }
+        srvParams.add(o);
+    }
+
+    /**
+     * Clear params for service
+     * @param o
+     */
+    public void clear() {
+        srvParams = null;
+    }
+
+    /**
      * 
      * @param <TEntity>
      * @param o
@@ -462,20 +539,38 @@ public class BL implements Serializable {
      * @return
      * @throws CDCException
      */
-    private <TEntity> List<TEntity> invoke(Object o, String m, Object... args) throws CDCException {
+    private Object invoke(Object o, String m, Object... args) throws CDCException {
         try {
-            if (args != null) {
+            if ((args != null) && (args.length > 0)) {
                 Class[] parameterTypes = new Class[args.length];
                 for (int i = 0; i < args.length; i++) {
                     parameterTypes[i] = args[i].getClass();
                 }
-                return (List<TEntity>) (o.getClass().getMethod(m, parameterTypes)).invoke(o, args);
+                return o.getClass().getMethod(m, parameterTypes).invoke(o, args);
+            } else if (criteria != null) {
+                return o.getClass().getMethod(m, DetachedCriteria.class).invoke(o, criteria);
             } else {
-                return (List<TEntity>) (o.getClass().getMethod(m)).invoke(o);
+                return o.getClass().getMethod(m).invoke(o);
             }
         } catch (Exception ex) {
             throw new CDCException(ex);
         }
+    }
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param m
+     * @return
+     * @throws CDCException
+     */
+    public <TObject> TObject call(String m) throws CDCException {
+        if ((srvParams != null) && (!srvParams.isEmpty())) {
+            return (TObject) invoke(bean(), m, srvParams.toArray());
+        } else {
+            return (TObject) invoke(bean(), m);
+        }
+
     }
 
     /**
@@ -486,7 +581,7 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     public <TEntity> void write(String m, Object... params) throws CDCException {
-        write(invoke(bean(), m, params));
+        write((List<TEntity>) invoke(bean(), m, params));
     }
 
     /**
@@ -505,18 +600,17 @@ public class BL implements Serializable {
      * @return
      * @throws CDCException
      */
-    public <TBean> TBean bean() throws CDCException {      
-         return  (TBean) wac.getBean(bClazz);
+    private <TBean> TBean bean() throws CDCException {
+        if ((srvClazz != null) && (srvName != null)) {
+            return (TBean) wac.getBean(srvName, srvClazz);
+        } else if ((srvClazz == null) && (srvName != null)) {
+            return (TBean) wac.getBean(srvName);
+        } else {
+            return (TBean) wac.getBean(srvClazz);
+        }
     }
 
-    /**
-     * 
-     * @param <TBean>
-     * @param name
-     * @return
-     * @throws CDCException
-     */
-    public <TBean> TBean bean(String name) throws CDCException {
+    public <TBean> TBean bean(String name, Class<TBean> bClazz) throws CDCException {
         return (TBean) wac.getBean(name, bClazz);
     }
 
@@ -893,13 +987,9 @@ public class BL implements Serializable {
         return requestWrapper.getEntry().get(name);
     }
 
-    /**
-     * 
-     * @param sessionEntity
-     */
-    public void newSession(Object sessionEntity) {
+    public <TSessionEntity> void newSession(TSessionEntity sessionEntity, Object IU) throws CDCException {
         requestWrapper.getSession().setAttribute(sessionName, sessionEntity);
-        IU = ((SessionEntityBase) sessionEntity).getIU();
+        checkSession();
     }
 
     /**
@@ -1002,5 +1092,9 @@ public class BL implements Serializable {
     public void setDateFormat(String dateFormat) {
         responseWrapper.setDateFormat(dateFormat);
         this.dateFormat = dateFormat;
+    }
+
+    public void setNameIU(String nameIU) {
+        this.nameIU = nameIU;
     }
 }

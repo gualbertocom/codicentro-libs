@@ -182,11 +182,11 @@ public class ParamsDB {
     }
 
     public boolean getValueBooleanOUT(int index) throws CDCException {
-        return TypeCast.ObjectToBoolean(getValueOUT(index));
+        return TypeCast.toBoolean(getValueOUT(index));
     }
 
     public boolean getValueBoolean(int index) throws CDCException {
-        return TypeCast.ObjectToBoolean(getValue(index));
+        return TypeCast.toBoolean(getValue(index));
     }
 
     public Date getValueDate(int index) throws CDCException {
