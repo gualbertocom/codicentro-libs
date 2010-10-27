@@ -23,27 +23,15 @@ public class TransportContext {
 
     private Logger log = LoggerFactory.getLogger(TransportContext.class);
 
-    /**
-     *
-     * @param request
-     * @param value
-     */
-    public TransportContext(HttpServletRequest request, Object value) {
+    public static void transport(HttpServletRequest request, Object value) {
         request.getSession().getServletContext().setAttribute(request.getSession().getId(), value);
     }
 
-    /**
-     * 
-     * @param request
-     * @param contextName
-     * @param idSession
-     * @return
-     */
-    public Object getTransportAttribute(HttpServletRequest request, String contextName, String idSession) {
-        ServletContext sc = request.getSession().getServletContext().getContext(contextName);
-        Object res = sc.getAttribute(idSession);
-        sc.removeAttribute(idSession);
-        sc = null;
-        return res;
+    public static Object recovery(HttpServletRequest request, String crossContextName, String id) {
+        ServletContext sc = request.getSession().getServletContext().getContext("/" + crossContextName);
+        return sc.getAttribute(id);
+    }
+
+    public static void destroy(HttpServletRequest request) {
     }
 }
