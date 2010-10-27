@@ -14,6 +14,7 @@
 package com.codicentro.cliser;
 
 import com.codicentro.cliser.dao.CliserDao;
+import com.codicentro.security.TransportContext;
 import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
@@ -77,7 +78,8 @@ public class BL implements Serializable {
      */
     public <TSessionEntity> void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
-            throw new CDCException("lng.msg.error.sessionexpired");
+            //throw new CDCException("lng.msg.error.sessionexpired");
+            requestWrapper.getSession().setAttribute(sessionName, "Not security implemented");
         }
         IU = invoke(session(), nameIU);
     }
@@ -970,10 +972,22 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     public List<Object> listValue(String paramName) throws CDCException {
+        // 137,true,true|138,true,false
         List<Object> rs = new ArrayList<Object>();
         StringTokenizer idx = new StringTokenizer(stringValue(paramName), "|,|");
         while (idx.hasMoreTokens()) {
             rs.add(idx.nextToken());
+        }
+        return rs;
+    }
+
+    public List<String[]> arrayValue(String paramName) throws CDCException {
+        // 137,true,true|138,true,false
+        List<String[]> rs = new ArrayList<String[]>();
+        StringTokenizer idx = new StringTokenizer(stringValue(paramName), "|");
+        while (idx.hasMoreTokens()) {
+            //idxValue = new StringTokenizer(idxItem.nextToken(), ",");
+            rs.add(idx.nextToken().split(","));
         }
         return rs;
     }
@@ -987,8 +1001,9 @@ public class BL implements Serializable {
         return requestWrapper.getEntry().get(name);
     }
 
-    public <TSessionEntity> void newSession(TSessionEntity sessionEntity, Object IU) throws CDCException {
+    public <TSessionEntity> void newSession(TSessionEntity sessionEntity) throws CDCException {
         requestWrapper.getSession().setAttribute(sessionName, sessionEntity);
+        // TransportContext.transport(getRequest(), sessionEntity);
         checkSession();
     }
 
