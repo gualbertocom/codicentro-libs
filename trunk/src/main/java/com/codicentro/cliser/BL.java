@@ -14,7 +14,6 @@
 package com.codicentro.cliser;
 
 import com.codicentro.cliser.dao.CliserDao;
-import com.codicentro.security.TransportContext;
 import com.codicentro.utils.CDCException;
 import com.codicentro.utils.TypeCast;
 import com.codicentro.utils.Types.DBProtocolType;
@@ -62,6 +61,7 @@ public class BL implements Serializable {
     private String srvName = null;
     private String srvMethodName = null;
     private List<Object> srvParams = null;
+    private List<Class> srvParamTypes = null;
     private String sessionName = null;
     private WebApplicationContext wac = null;
     /*** ENTITY ***/
@@ -81,7 +81,7 @@ public class BL implements Serializable {
             //throw new CDCException("lng.msg.error.sessionexpired");
             requestWrapper.getSession().setAttribute(sessionName, "Not security implemented");
         }
-        IU = invoke(session(), nameIU);
+        IU = invoke(session(), nameIU, null);
     }
 
     public <TSessionEntity> TSessionEntity session() {
@@ -89,7 +89,7 @@ public class BL implements Serializable {
     }
 
     public Object session(String propertyName) throws CDCException {
-        return invoke(requestWrapper.getSession().getAttribute(sessionName), propertyName);
+        return invoke(requestWrapper.getSession().getAttribute(sessionName), propertyName, null);
     }
 
     /**
@@ -520,8 +520,22 @@ public class BL implements Serializable {
         }
         if (srvParams == null) {
             srvParams = new ArrayList<Object>();
+            srvParamTypes = new ArrayList<Class>();
         }
         srvParams.add(o);
+        srvParamTypes.add(o.getClass());
+    }
+
+    public void param(Class type, Object o) {
+        if (o == null) {
+            return;
+        }
+        if (srvParams == null) {
+            srvParams = new ArrayList<Object>();
+            srvParamTypes = new ArrayList<Class>();
+        }
+        srvParams.add(o);
+        srvParamTypes.add(type);
     }
 
     /**
@@ -541,14 +555,28 @@ public class BL implements Serializable {
      * @return
      * @throws CDCException
      */
-    private Object invoke(Object o, String m, Object... args) throws CDCException {
+    private Object invoke(Object o, String m, Object[] values) throws CDCException {
         try {
-            if ((args != null) && (args.length > 0)) {
-                Class[] parameterTypes = new Class[args.length];
-                for (int i = 0; i < args.length; i++) {
-                    parameterTypes[i] = args[i].getClass();
+            if ((values != null) && (values.length > 0)) {
+                Class[] valuesTypes = new Class[values.length];
+                for (int i = 0; i < values.length; i++) {
+                    valuesTypes[i] = values[i].getClass();
                 }
-                return o.getClass().getMethod(m, parameterTypes).invoke(o, args);
+                return o.getClass().getMethod(m, valuesTypes).invoke(o, values);
+            } else if (criteria != null) {
+                return o.getClass().getMethod(m, DetachedCriteria.class).invoke(o, criteria);
+            } else {
+                return o.getClass().getMethod(m).invoke(o);
+            }
+        } catch (Exception ex) {
+            throw new CDCException(ex);
+        }
+    }
+
+    private Object invoke(Object o, String m, Class[] types, Object[] values) throws CDCException {
+        try {
+            if ((values != null) && (values.length > 0)) {
+                return o.getClass().getMethod(m, types).invoke(o, values);
             } else if (criteria != null) {
                 return o.getClass().getMethod(m, DetachedCriteria.class).invoke(o, criteria);
             } else {
@@ -567,10 +595,10 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     public <TObject> TObject call(String m) throws CDCException {
-        if ((srvParams != null) && (!srvParams.isEmpty())) {
-            return (TObject) invoke(bean(), m, srvParams.toArray());
+        if ((srvParams != null) && (!srvParams.isEmpty())) {          
+            return (TObject) invoke(bean(), m, srvParamTypes.toArray(new Class[0]), srvParams.toArray());
         } else {
-            return (TObject) invoke(bean(), m);
+            return (TObject) invoke(bean(), m, null);
         }
 
     }
