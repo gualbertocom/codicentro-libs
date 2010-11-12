@@ -36,6 +36,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.util.SerializationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 //import org.springframework.web.context.WebApplicationContext;
@@ -238,7 +239,7 @@ public class BL implements Serializable {
     }
 
     /**
-     * 
+     * Apply an "equal" constraint to the named property
      * @param ignoreCase
      * @param propertyName
      * @param otherPropertyName
@@ -260,6 +261,43 @@ public class BL implements Serializable {
             throw new CDCException(ex);
         }
 
+    }
+
+    /**
+     * Apply a "not equal" constraint to the named property
+     * @param ignoreCase
+     * @param propertyName
+     * @param value
+     * @throws CDCException
+     */
+    public void NE(boolean ignoreCase, String propertyName, Object value) throws CDCException {
+        if (value != null) {
+            if (criteria == null) {
+                criteria = DetachedCriteria.forClass(eClazz);
+            }
+            try {
+                if (ignoreCase) {
+                    criteria.add(Restrictions.ne(propertyName, value).ignoreCase());
+                } else {
+                    criteria.add(Restrictions.ne(propertyName, value));
+                }
+            } catch (Exception ex) {
+                log.error(ex.getMessage(), ex);
+                throw new CDCException(ex);
+            }
+        }
+    }
+
+    /**
+     * Apply case-insensitive an "not equal" constraint to the named property when ignoreCase is true
+     * @param propertyName
+     * @param paramName
+     * @param ignoreCase
+     */
+    public void NE(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
+        if (!TypeCast.isNullOrEmpy(paramName)) {
+            NE(ignoreCase, propertyName, form(paramName));
+        }
     }
 
     /**
@@ -595,7 +633,7 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     public <TObject> TObject call(String m) throws CDCException {
-        if ((srvParams != null) && (!srvParams.isEmpty())) {          
+        if ((srvParams != null) && (!srvParams.isEmpty())) {
             return (TObject) invoke(bean(), m, srvParamTypes.toArray(new Class[0]), srvParams.toArray());
         } else {
             return (TObject) invoke(bean(), m, null);
@@ -1115,11 +1153,13 @@ public class BL implements Serializable {
      * Web application context
      * @param wac
      */
-    public void setWac(WebApplicationContext wac) {
-        this.wac = wac;
-        // wac.getBean(BL.class).getDao()
-        //this.wac.getBean(this.getClass());
-        dao = this.wac.getBean(BL.class).getDao();
+    public void setWac(WebApplicationContext wac) throws CDCException {
+        try {
+            this.wac = wac;
+            dao = this.wac.getBean(BL.class).getDao();
+        } catch (BeansException ex) {
+            log.info("Bean BL not found.", ex);
+        }
     }
 
     /**
