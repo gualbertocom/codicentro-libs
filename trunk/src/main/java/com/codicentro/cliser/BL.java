@@ -494,6 +494,32 @@ public class BL implements Serializable {
     }
 
     /**
+     * A property value count
+     * @param propertyName
+     * @throws CDCException
+     */
+    public void PVC(String propertyName) throws CDCException {
+        if (projections == null) {
+            projections = Projections.projectionList();
+        }
+        projections.add(Projections.count(propertyName));
+
+    }
+
+    /**
+     * A property value sum
+     * @param propertyName
+     * @throws CDCException
+     */
+    public void PVS(String propertyName) throws CDCException {
+        if (projections == null) {
+            projections = Projections.projectionList();
+        }
+        projections.add(Projections.sum(propertyName));
+
+    }
+
+    /**
      * Ascending order
      * @param propertyName
      */
@@ -529,7 +555,7 @@ public class BL implements Serializable {
      * @throws CDCException
      */
     public void find() throws CDCException {
-        responseWrapper.setDataJSON(eClazz, eClazzAlia, findByCriteria());
+        responseWrapper.setDataJSON(eClazz, eClazzAlia, findByCriteria(true));
     }
 
     public void find(String hql) throws CDCException {
@@ -537,7 +563,7 @@ public class BL implements Serializable {
     }
 
     public <TEntity> List<TEntity> rsFind() throws CDCException {
-        return findByCriteria();
+        return findByCriteria(false);
     }
 
     public <TEntity> List<TEntity> rsFind(String hql) throws CDCException {
@@ -699,21 +725,23 @@ public class BL implements Serializable {
     /**
      * 
      * @param <TEntity>
+     * @param paginator
      * @return
      * @throws CDCException
      */
-    private <TEntity> List<TEntity> findByCriteria() throws CDCException {
-
+    private <TEntity> List<TEntity> findByCriteria(boolean paginator) throws CDCException {
         if (getDao() == null) {
             throw new CDCException("cliser.msg.error.dao.notinitialized");
         }
         if (criteria == null) {
             criteria = DetachedCriteria.forClass(eClazz);
         }
-        if (projections != null) {
-            criteria.setProjection(projections);
+        if (paginator) {
+            if (projections != null) {
+                criteria.setProjection(projections);
+            }
+            extra();
         }
-        extra();
         return getDao().find(criteria, responseWrapper.getPage(), responseWrapper.getPageSize());
     }
 
