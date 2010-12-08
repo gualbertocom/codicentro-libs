@@ -1,7 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on 03/08/2010, 10:52:52 AM
+ * Place: Toluca, Estado de Mexico, Mexico.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: CliserSpringHibernateDao.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+  **/
 package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
@@ -17,10 +26,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- * @author avillalobos
- */
 @Repository
 public class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
 
