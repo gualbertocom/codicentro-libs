@@ -1,7 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on Apr 20, 2009, 05:37:24 PM
+ * Place: Monterrey, Nuevo León, México.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: RequestWrapper.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ * 1.0.0       Apr 20, 2009           Alexander Villalobos Yadró      New class.
+ **/
 package com.codicentro.cliser;
 
 import com.codicentro.utils.CDCException;
@@ -22,10 +32,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author casoft
- */
 public class RequestWrapper implements Serializable {
 
     private Logger log = LoggerFactory.getLogger(ResponseWrapper.class);

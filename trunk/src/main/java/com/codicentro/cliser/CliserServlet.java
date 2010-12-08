@@ -5,7 +5,7 @@
  * Place: Monterrey, Nuevo León, México.
  * Company: Codicentro
  * Web: http://www.codicentro.com
- * Class Name: Entry.java
+ * Class Name: CliserServlet.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description

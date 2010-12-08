@@ -79,8 +79,7 @@ public class BL implements Serializable {
      */
     public <TSessionEntity> void checkSession() throws CDCException {
         if ((requestWrapper.getSession() == null) || (requestWrapper.getSession().getAttribute(sessionName) == null)) {
-            //throw new CDCException("lng.msg.error.sessionexpired");
-            requestWrapper.getSession().setAttribute(sessionName, "Not security implemented");
+            throw new CDCException("lng.msg.error.sessionexpired");
         }
         IU = invoke(session(), nameIU, null);
     }
@@ -916,6 +915,10 @@ public class BL implements Serializable {
         responseWrapper = new ResponseWrapper(response, stringValue("callback"));
     }
 
+    public ResponseWrapper getResponseWrapper() {
+        return responseWrapper;
+    }
+
     /**
      *
      * @param dbProtocol
@@ -1207,5 +1210,9 @@ public class BL implements Serializable {
 
     public void setNameIU(String nameIU) {
         this.nameIU = nameIU;
+    }
+
+    public String getRealPath() {
+        return getWac().getServletContext().getRealPath(System.getProperty("file.separator"));
     }
 }
