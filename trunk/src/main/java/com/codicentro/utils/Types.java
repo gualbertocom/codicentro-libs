@@ -1,7 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * Author: Alexander Villalobos Yadr�
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on May 19, 2008, 10:27:26 AM
+ * Place: Quer�taro, Quer�taro, M�xico.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: Types.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ **/
 package com.codicentro.utils;
 
 public class Types {

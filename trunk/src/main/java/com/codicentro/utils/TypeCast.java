@@ -317,6 +317,20 @@ public class TypeCast {
         }
     }
 
+    /**
+     * Decodes a String into a Short. Accepts decimal, hexadecimal, and octal numbers.
+     * @param o
+     * @return
+     * @throws CDCException
+     */
+    public static Short toShortD(String o) throws CDCException {
+        try {
+            return Short.decode(o);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     public static Float toFloat(Object o) throws CDCException {
         Float result = null;
         try {
