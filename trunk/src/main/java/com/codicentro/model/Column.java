@@ -20,7 +20,7 @@ import com.codicentro.utils.Types.XLSDataType;
 
 public class Column {
 
-    private String type = "indefined";
+    private String type = "undefined";
     private String typeName = "undefined";
     private String name = "undefined";
     private String alias = "undefined";
