@@ -1,6 +1,1 @@
 == Language ==
-* Using [[Assert]].
-* Using [[Array Iteration with For|For]] to Iterate through an Array
-* [[Referencing other JavaFX files]] from within JavaFX
-* [[Functional Programming]]
-* [[JavaFX's version of "this"]]
