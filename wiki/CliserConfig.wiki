@@ -1,5 +1,5 @@
 == Cliser Config ==
 
 <code>
-   
+  System.out("Hola");
 </code>
