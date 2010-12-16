@@ -1,4 +1,7 @@
 == Example Cliser Config ==
+
+/WEB-INF/cliser-config.xml
+
 {{{
 <?xml version="1.0" encoding="UTF-8"?>
 <cliser-config>
