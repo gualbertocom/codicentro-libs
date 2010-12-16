@@ -1,5 +1,52 @@
 == Cliser Config ==
 
 <code>
-  System.out("Hola");
+ <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Alexander Villalobos Yadró -->
+<cliser-config>
+    <cliser-init>
+        <tracert-logs id="DMS-CPanel - V1.0">
+            <active>true</active>
+            <out-type>FILE</out-type>
+            <filename>DmsCPanel-1.0-</filename>
+        </tracert-logs>
+        <controller-param-name>ctrl</controller-param-name>
+        <!-- cross-context-path>/dmsdestruction</cross-context-path -->        
+        <session-name>DMS-CPANEL-SESSION</session-name>
+        <iu>getLogin</iu>
+        <db-protocol version="10g">ORACLE</db-protocol>
+        <date-format>dd/MM/yyyy</date-format>
+        <resource-locations>
+            <value></value>
+        </resource-locations>
+    </cliser-init>
+    <!--- WORKFLOW -->
+    <business-logic package="mx.com.adea.workflow.bl">
+        <bl>Workflow</bl>
+        <bl>WorkflowState</bl>
+        <bl>WorkflowEvent</bl>
+        <bl>WorkflowConfig</bl>
+        <bl>WorkflowSecurity</bl>
+    </business-logic>
+    <!-- DMS -->    
+    <business-logic package="mx.com.adea.dms.bl">
+        <bl>Template</bl>
+        <bl>Group</bl>
+        <bl>Category</bl>
+        <bl>Document</bl>
+        <bl>Rule</bl>
+        <bl>IncidentType</bl>
+        <bl>CheckList</bl>
+        <bl>Product</bl>
+        <bl>OperationProduct</bl>
+        <bl>ChecklistRule</bl>
+        <bl>Incident</bl>
+        <bl>IncidentRule</bl>
+        <bl>Customer</bl>
+    </business-logic>
+    <!-- SECURITY -->
+    <business-logic package="mx.com.adea.security.bl">
+        <bl>Login</bl>
+    </business-logic>
+</cliser-config>
 </code>
