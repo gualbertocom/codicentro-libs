@@ -3,26 +3,26 @@
 <code>
 <?xml version="1.0" encoding="UTF-8"?>
 <cliser-config>
-    <cliser-init>
-        <tracert-logs id="EXAMPLE 1">
-            <active>true</active>
-            <out-type>FILE</out-type>
-            <filename>log-filename</filename>
-        </tracert-logs>
-        <controller-param-name>ctrl</controller-param-name>        
-        <session-name>EXAMPLE-1-SESSION-NAME</session-name>
-        <iu>getUserName</iu>
-        <db-protocol version="1.0">DB-PROVIDER</db-protocol>
-        <date-format>dd/MM/yyyy</date-format>
-        <resource-locations>
-            <value>resource-example1</value>
-        </resource-locations>
-    </cliser-init>
-    <!--- CATALOGUES -->
-    <business-logic package="com.codicentro.example.catalogues">
-        <bl>State</bl>
-        <bl>City</bl>
-        <bl package="com.codicentro.example.catalogues.others">Year</bl>
-    </business-logic>   
+<cliser-init>
+<tracert-logs id="EXAMPLE 1">
+<active>true</active>
+<out-type>FILE</out-type>
+<filename>log-filename</filename>
+</tracert-logs>
+<controller-param-name>ctrl</controller-param-name>        
+<session-name>EXAMPLE-1-SESSION-NAME</session-name>
+<iu>getUserName</iu>
+<db-protocol version="1.0">DB-PROVIDER</db-protocol>
+<date-format>dd/MM/yyyy</date-format>
+<resource-locations>
+<value>resource-example1</value>
+</resource-locations>
+</cliser-init>
+<!--- CATALOGUES -->
+<business-logic package="com.codicentro.example.catalogues">
+<bl>State</bl>
+<bl>City</bl>
+<bl package="com.codicentro.example.catalogues.others">Year</bl>
+</business-logic>   
 </cliser-config>
 </code>
