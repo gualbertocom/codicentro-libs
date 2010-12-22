@@ -89,7 +89,7 @@ public class BL implements Serializable {
     }
 
     public Object session(String propertyName) throws CDCException {
-        return invoke(requestWrapper.getSession().getAttribute(sessionName), propertyName, null);
+        return invoke(requestWrapper.getSession().getAttribute(sessionName), propertyName);
     }
 
     /**
@@ -636,6 +636,15 @@ public class BL implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param o
+     * @param m
+     * @param types
+     * @param values
+     * @return
+     * @throws CDCException
+     */
     private Object invoke(Object o, String m, Class[] types, Object[] values) throws CDCException {
         try {
             if ((values != null) && (values.length > 0)) {
@@ -645,6 +654,21 @@ public class BL implements Serializable {
             } else {
                 return o.getClass().getMethod(m).invoke(o);
             }
+        } catch (Exception ex) {
+            throw new CDCException(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param o
+     * @param m
+     * @return
+     * @throws CDCException
+     */
+    private Object invoke(Object o, String m) throws CDCException {
+        try {
+            return o.getClass().getMethod(m).invoke(o);
         } catch (Exception ex) {
             throw new CDCException(ex);
         }
