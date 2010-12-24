@@ -17,6 +17,7 @@ package com.codicentro.utils;
 import com.codicentro.security.Encryption;
 import com.codicentro.utils.Types.EncrypType;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -39,7 +40,7 @@ public class Utils {
         String result = null;
         Encryption encryption = null;
         Random random = new Random(1000000);
-        switch (et) { 
+        switch (et) {
             case SHA1:
                 encryption = new Encryption(makeId() + TypeCast.toString(random.nextInt()));
                 result = encryption.SHA1();
@@ -49,5 +50,64 @@ public class Utils {
                 break;
         }
         return result;
+    }
+
+    public static int getLastDayOfMonth(final int month, final int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Get the last business day of the month for a given month / year combination
+     * @param month The month
+     * @param year The year
+     * @return The last business day
+     */
+    public static int getLastBusinessDayOfMonth(final int month, final int year) {
+        int day = -1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        // Keep looking backwards until the day is not a weekend or a holiday
+        while (true) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                continue;
+            } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                calendar.add(Calendar.DAY_OF_MONTH, -2);
+                continue;
+            }
+//            else if (holidays.contains(calendar.getTime())) {
+//                calendar.add(Calendar.DAY_OF_MONTH, -1);
+//                continue;
+//            }
+            break;
+        } // End while
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        return day;
+    }
+
+    public static int getBusinessDayOfMonth(final int month, final int year, final int day, final int nDay) {
+        int cDay = 1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        while (cDay < nDay) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+            } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                calendar.add(Calendar.DAY_OF_MONTH, -2);
+            } else {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                cDay++;
+            }
+        }
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 }
