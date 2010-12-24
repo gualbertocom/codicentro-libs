@@ -856,6 +856,15 @@ public class BL implements Serializable {
     /**
      * 
      * @param <TEntity>
+     * @param entitys
+     */
+    public <TEntity> void save(List<TEntity> entitys) {
+        getDao().persist(entitys.toArray());
+    }
+
+    /**
+     * 
+     * @param <TEntity>
      * @param id
      * @param eClazzJoinTable
      * @param entityJoinTable
