@@ -19,6 +19,7 @@ import com.codicentro.utils.Types.EncrypType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class Utils {
@@ -66,13 +67,12 @@ public class Utils {
      * @param year The year
      * @return The last business day
      */
-    public static int getLastBusinessDayOfMonth(final int month, final int year) {
+    public static int getLastBusinessDayOfMonth(final int month, final int year, final List<Date> holidays) {
         int day = -1;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-
         // Keep looking backwards until the day is not a weekend or a holiday
         while (true) {
             if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
@@ -81,18 +81,17 @@ public class Utils {
             } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 calendar.add(Calendar.DAY_OF_MONTH, -2);
                 continue;
+            } else if ((holidays != null) && (!holidays.isEmpty()) && (holidays.contains(calendar.getTime()))) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                continue;
             }
-//            else if (holidays.contains(calendar.getTime())) {
-//                calendar.add(Calendar.DAY_OF_MONTH, -1);
-//                continue;
-//            }
             break;
         } // End while
         day = calendar.get(Calendar.DAY_OF_MONTH);
         return day;
     }
 
-    public static int getBusinessDayOfMonth(final int month, final int year, final int day, final int nDay) {
+    public static int getBusinessDayOfMonth(final int month, final int year, final int day, final int nDay, final List<Date> holidays) {
         int cDay = 1;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, month);
@@ -103,6 +102,8 @@ public class Utils {
                 calendar.add(Calendar.DAY_OF_MONTH, -1);
             } else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 calendar.add(Calendar.DAY_OF_MONTH, -2);
+            } else if ((holidays != null) && (!holidays.isEmpty()) && (holidays.contains(calendar.getTime()))) {
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
             } else {
                 calendar.add(Calendar.DAY_OF_MONTH, -1);
                 cDay++;

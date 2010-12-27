@@ -107,6 +107,7 @@ public class BL implements Serializable {
      */
     public <TEntity> void entity(Class<TEntity> eClazz) {
         this.eClazz = eClazz;
+        criteria = null;
     }
 
     /**
@@ -255,6 +256,19 @@ public class BL implements Serializable {
             } else {
                 criteria.add(Restrictions.eq(propertyName, otherPropertyName));
             }
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            throw new CDCException(ex);
+        }
+
+    }
+
+    public void SQL(String sql) throws CDCException {
+        if (criteria == null) {
+            criteria = DetachedCriteria.forClass(eClazz);
+        }
+        try {
+            criteria.add(Restrictions.sqlRestriction(sql));
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             throw new CDCException(ex);
@@ -892,9 +906,16 @@ public class BL implements Serializable {
      */
     public void remove(Serializable id) throws CDCException {
         if (eClazz == null) {
-            throw new CDCException("cliser.msg.error.save.entityisnull");
+            throw new CDCException("cliser.msg.error.remove.entityisnull");
         }
         getDao().delete(getDao().get(eClazz, id));
+    }
+
+    public boolean exist(Serializable id) throws CDCException {
+        if (eClazz == null) {
+            throw new CDCException("cliser.msg.error.exist.entityisnull");
+        }
+        return (getDao().get(eClazz, id) != null);
     }
 
     /**
