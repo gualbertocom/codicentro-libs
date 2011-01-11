@@ -15,7 +15,6 @@
 package com.codicentro.utils;
 
 import com.codicentro.model.Cell;
-import com.codicentro.model.Column;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -174,6 +173,7 @@ public class FileTools {
      * @param filename
      * @throws Exception
      */
+    @Deprecated
     private static void exportXLS(Document doc, String idHeader, List<Map<String, Object>> values, HttpServletResponse response, String filename) throws Exception {
         /*** INITIALIZE TEMPLATE ***/
         Element root = doc.getRootElement();
@@ -247,6 +247,79 @@ public class FileTools {
         exportXLS(response, book, filename);
     }
 
+    private static <TEntity> void exportXLS(List<TEntity> values, Document doc, String idHeader, HttpServletResponse response, String filename) throws Exception {
+        /*** INITIALIZE TEMPLATE ***/
+        Element root = doc.getRootElement();
+        /*** INITIALIZED WORKBOOK ***/
+        HSSFWorkbook book = new HSSFWorkbook();
+        HSSFSheet sheet = book.createSheet();
+        int idxRow = 0;
+        HSSFRow row = sheet.createRow(idxRow);
+        Element headers = root.getChild("headers");
+        Iterator<Element> iHeader = headers.getChildren("header").iterator();
+        Iterator<Element> iColumn = null;
+        Element header = null;
+        while ((iHeader.hasNext()) && (iColumn == null)) {
+            header = iHeader.next();
+            if ((header.getAttribute("name") != null) && (header.getAttribute("name").getValue().equals(idHeader))) {
+                iColumn = header.getChildren("column").iterator();
+            }
+        }
+        List<Cell> cells = new ArrayList<Cell>();
+        /*** HEADERS ***/
+        int idxCell = -1;
+        while (iColumn.hasNext()) {
+            idxCell++;
+            byTemplate(book, sheet, row, iColumn.next(), cells, idxCell, true);
+        }
+        HSSFCell cell = null;
+        Object oValue = null;
+        HSSFCellStyle style = null;
+        for (Object value : values) {
+            idxRow++;
+            row = sheet.createRow(idxRow);
+            for (idxCell = 0; idxCell < cells.size(); idxCell++) {
+                cell = row.createCell(idxCell);
+                /*** STYLE ***/
+                style = book.createCellStyle();
+                if (cells.get(idxCell).getDataFormat() != null) {
+                    style.setDataFormat(HSSFDataFormat.getBuiltinFormat(cells.get(idxCell).getDataFormat()));
+                }
+                cell.setCellStyle(style);
+                /*** ***/
+                if (cells.get(idxCell).getFormula() != null) {
+                    cell.setCellFormula(mkFormula(cells.get(idxCell).getFormula(), (idxRow + 1), idxCell));
+                } else {
+                    oValue = TypeCast.GN(value, "get" + cells.get(idxCell).getName());
+                    if (oValue instanceof java.lang.Number) {
+                        cell.setCellValue(TypeCast.toBigDecimal(oValue).doubleValue());
+                    } else {
+                        cell.setCellValue(TypeCast.toString(oValue));
+                    }
+                }
+            }
+        }
+        /*** SUMMARY ***/
+        idxRow++;
+        row = sheet.createRow(idxRow);
+        for (idxCell = 0; idxCell < cells.size(); idxCell++) {
+            if (cells.get(idxCell).isSummary()) {
+                cell = row.createCell(idxCell);
+                /*** STYLE ***/
+                style = book.createCellStyle();
+                if (cells.get(idxCell).getDataFormat() != null) {
+                    style.setDataFormat(HSSFDataFormat.getBuiltinFormat(cells.get(idxCell).getDataFormat()));
+                }
+                cell.setCellStyle(style);
+                /*** ***/
+                if (cells.get(idxCell).getSummaryFormula() != null) {
+                    cell.setCellFormula(mkFormula(cells.get(idxCell).getSummaryFormula(), idxRow, idxCell));
+                }
+            }
+        }
+        exportXLS(response, book, filename);
+    }
+
     /**
      *
      * @param template
@@ -256,6 +329,7 @@ public class FileTools {
      * @param filename
      * @throws Exception
      */
+    @Deprecated
     public static void exportXLS(File template, String idHeader, List<Map<String, Object>> values, HttpServletResponse response, String filename) throws Exception {
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(template);
@@ -271,6 +345,7 @@ public class FileTools {
      * @param filename
      * @throws Exception
      */
+    @Deprecated
     public static void exportXLS(URL template, String idHeader, List<Map<String, Object>> values, HttpServletResponse response, String filename) throws Exception {
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(template);
@@ -286,10 +361,59 @@ public class FileTools {
      * @param filename
      * @throws Exception
      */
+    @Deprecated
     public static void exportXLS(String key, String idHeader, List<Map<String, Object>> values, HttpServletResponse response, String filename) throws Exception {
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(is(key));
         exportXLS(doc, idHeader, values, response, filename);
+    }
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param values
+     * @param template
+     * @param idHeader
+     * @param response
+     * @param filename
+     * @throws Exception
+     */
+    public static <TEntity> void exportXLS(List<TEntity> values, File template, String idHeader, HttpServletResponse response, String filename) throws Exception {
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(template);
+        exportXLS(values, doc, idHeader, response, filename);
+    }
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param values
+     * @param template
+     * @param idHeader
+     * @param response
+     * @param filename
+     * @throws Exception
+     */
+    public static <TEntity> void exportXLS(List<TEntity> values, URL template, String idHeader, HttpServletResponse response, String filename) throws Exception {
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(template);
+        exportXLS(values, doc, idHeader, response, filename);
+    }
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param values
+     * @param key
+     * @param idHeader
+     * @param response
+     * @param filename
+     * @throws Exception
+     */
+    public static <TEntity> void exportXLS(List<TEntity> values, String key, String idHeader, HttpServletResponse response, String filename) throws Exception {
+        SAXBuilder builder = new SAXBuilder();
+        Document doc = builder.build(is(key));
+        exportXLS(values, doc, idHeader, response, filename);
     }
 
     /**

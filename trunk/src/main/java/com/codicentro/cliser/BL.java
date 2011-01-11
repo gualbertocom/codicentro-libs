@@ -1053,6 +1053,10 @@ public class BL implements Serializable {
         return TypeCast.toBigInteger(form(paramName));
     }
 
+    public int intValue(String paramName) throws CDCException {
+        return integerValue(paramName).intValue();
+    }
+
     /**
      * 
      * @param paramName
