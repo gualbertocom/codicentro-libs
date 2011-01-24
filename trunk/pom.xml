@@ -55,17 +55,7 @@
         </plugins>
     </build>
     <dependencies>
-        <!-- PERSISTENCE -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>javax.persistence</artifactId>
-            <version>2.0.0</version>
-        </dependency>
+        <!-- PERSISTENCE -->       
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
