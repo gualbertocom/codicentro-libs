@@ -14,8 +14,8 @@
  **/
 package com.codicentro.cliser;
 
-import com.codicentro.utils.CDCException;
-import com.codicentro.utils.TypeCast;
+import com.codicentro.core.CDCException;
+import com.codicentro.core.TypeCast;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

@@ -10,7 +10,7 @@
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
-  **/
+ **/
 package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
@@ -75,6 +75,12 @@ public interface CliserDao {
      */
     public <TEntity> List<TEntity> find(String hql);
 
+    /**
+     *
+     * @param <TEntity>
+     * @param sql
+     * @return
+     */
     public <TEntity> List<TEntity> find(StringBuilder sql);
 
     /**

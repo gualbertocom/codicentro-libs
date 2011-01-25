@@ -14,14 +14,14 @@
  **/
 package com.codicentro.cliser;
 
+import com.codicentro.core.CDCException;
+import com.codicentro.core.TypeCast;
+import com.codicentro.core.model.Table;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
-import com.codicentro.model.Table;
-import com.codicentro.utils.CDCException;
-import com.codicentro.utils.TypeCast;
 import flexjson.JSONSerializer;
 import flexjson.transformer.DateTransformer;
 import java.util.ArrayList;

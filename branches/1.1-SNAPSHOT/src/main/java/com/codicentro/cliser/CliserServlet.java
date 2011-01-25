@@ -14,9 +14,9 @@
  **/
 package com.codicentro.cliser;
 
-import com.codicentro.utils.CDCException;
-import com.codicentro.utils.TypeCast;
-import com.codicentro.utils.Types.DBProtocolType;
+import com.codicentro.core.CDCException;
+import com.codicentro.core.TypeCast;
+import com.codicentro.core.Types.DBProtocolType;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

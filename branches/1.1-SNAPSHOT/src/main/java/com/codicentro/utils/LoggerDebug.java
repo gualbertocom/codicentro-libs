@@ -14,8 +14,9 @@
  **/
 package com.codicentro.utils;
 
-import com.codicentro.model.ParamsDB;
-import com.codicentro.utils.Types.LoggerOutType;
+import com.codicentro.core.CDCException;
+import com.codicentro.core.Types.LoggerOutType;
+import com.codicentro.core.model.ParamsDB;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -23,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Deprecated
 public class LoggerDebug {
 
     private PrintStream console = null;

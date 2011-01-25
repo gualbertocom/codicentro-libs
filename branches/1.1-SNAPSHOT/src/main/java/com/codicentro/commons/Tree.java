@@ -14,8 +14,8 @@
  **/
 package com.codicentro.commons;
 
-import com.codicentro.model.Table;
-import com.codicentro.utils.CDCException;
+import com.codicentro.core.CDCException;
+import com.codicentro.core.model.Table;
 import java.io.Serializable;
 
 public class Tree implements Serializable {
