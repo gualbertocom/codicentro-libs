@@ -123,6 +123,19 @@ public class BL implements Serializable {
 
     /**
      * 
+     * @param <TEntity>
+     * @param eClazz
+     * @param id
+     * @return
+     * @throws CDCException
+     */
+    public <TEntity> TEntity entity(Serializable id, Class<TEntity> eClazz) throws CDCException {
+        entity(eClazz);
+        return (TEntity) dao.get(eClazz, id);
+    }
+
+    /**
+     * 
      * @param <TBean>
      * @param srvClazz
      */
