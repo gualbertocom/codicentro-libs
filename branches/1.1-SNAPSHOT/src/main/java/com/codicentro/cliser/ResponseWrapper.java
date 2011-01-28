@@ -147,17 +147,33 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
+     *
+     * @param <TEntity>
+     * @param eClazz
+     * @param eClazzAlia
+     * @param pojo
+     */
+    public <TEntity> void setDataJSON(TEntity pojo, Class<TEntity> eClazz, String eClazzAlia) {
+        eClazzAlia = (eClazzAlia == null) ? eClazz.getSimpleName() : eClazzAlia;
+        dataJSON(eClazzAlia, pojo);
+    }
+
+    private void initializeJSON(String eClazzAlia) {
+        dataJSON.rootName(eClazzAlia);
+        dataJSON.setIncludes(includes);
+        dataJSON.setExcludes(excludes);
+        dataJSON.transform(new DateTransformer(dateFormat), Date.class);
+        dataJSON.setAlias(mAlias);
+    }
+
+    /**
      * 
      * @param <TEntity>
      * @param eClazzAlia
      * @param pojos
      */
     private <TEntity> void dataJSON(String eClazzAlia, List<TEntity> pojos) {
-        dataJSON.rootName(eClazzAlia);
-        dataJSON.setIncludes(includes);
-        dataJSON.setExcludes(excludes);
-        dataJSON.transform(new DateTransformer(dateFormat), Date.class);
-        dataJSON.setAlias(mAlias);
+        initializeJSON(eClazzAlia);
         if (!pojos.isEmpty()) {
             StringBuilder out = new StringBuilder();
             if (deepSerializer) {
@@ -173,9 +189,36 @@ public class ResponseWrapper implements Serializable {
                 data.add(out.toString());
             }
         } else {
-            data.add("\"" + eClazzAlia + "\":[]");
+            data.add(eClazzAlia + ":[]");
         }
 
+    }
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param eClazzAlia
+     * @param pojo
+     */
+    private <TEntity> void dataJSON(String eClazzAlia, TEntity pojo) {
+        initializeJSON(eClazzAlia);
+        if (pojo != null) {
+            StringBuilder out = new StringBuilder();
+            if (deepSerializer) {
+                log.info("/* DEEP SERIALIZER */");
+                dataJSON.deepSerialize(pojo, out);
+            } else {
+                log.info("/* SERIALIZER */");
+                dataJSON.serialize(pojo, out);
+            }
+            if (out.toString().startsWith("{")) {
+                data.add(out.toString().substring(1, out.toString().length() - 1));
+            } else {
+                data.add(out.toString());
+            }
+        } else {
+            data.add(eClazzAlia + ":[]");
+        }
     }
 
     /**
@@ -310,10 +353,10 @@ public class ResponseWrapper implements Serializable {
             if (callback != null) {
                 json.append(callback).append("(");
             }
-            json.append("{\"version\":1.0");
-            json.append(",\"success\":").append(success);
-            json.append(",\"tracer\":[").append(((tracert == null) ? "" : tracert.toString())).append("]");
-            json.append(",\"message\":[").append(((message == null) ? "" : message.toString())).append("]");
+            json.append("{version:1.0");
+            json.append(",success:").append(success);
+            json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
+            json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
             //json.append(",data:[");
             String tmpData = null;
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
@@ -323,10 +366,10 @@ public class ResponseWrapper implements Serializable {
                 }
             }
             //json.append("]");
-            json.append(",\"rowCount\":").append(rowCount);
-            json.append(",\"colCount\":").append(colCount);
-            json.append(",\"page\":").append(page);
-            json.append(",\"pageSize\":").append(pageSize);
+            json.append(",rowCount:").append(rowCount);
+            json.append(",colCount:").append(colCount);
+            json.append(",page:").append(page);
+            json.append(",pageSize:").append(pageSize);
             json.append("}");
             if (callback != null) {
                 json.append(");");

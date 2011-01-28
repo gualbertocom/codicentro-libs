@@ -738,6 +738,10 @@ public class BL implements Serializable {
         responseWrapper.setDataJSON(eClazz, eClazzAlia, pojos);
     }
 
+    public <TEntity> void write(TEntity pojo) throws CDCException {
+        responseWrapper.setDataJSON(pojo, eClazz, eClazzAlia);
+    }
+
     /**
      *
      * @param <TBean>
