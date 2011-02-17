@@ -361,7 +361,7 @@ public class ResponseWrapper implements Serializable {
             String tmpData = null;
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
                 tmpData = i.next();
-                if (!TypeCast.isNullOrEmpy(tmpData)) {
+                if (!TypeCast.isNullOrEmpty(tmpData)) {
                     json.append(",").append(tmpData);
                 }
             }

@@ -211,7 +211,7 @@ public class BL implements Serializable {
      * @param ignoreCase
      */
     public void EQ(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
-        if (!TypeCast.isNullOrEmpy(paramName)) {
+        if (!TypeCast.isNullOrEmpty(paramName)) {
             EQ(ignoreCase, propertyName, form(paramName));
         }
     }
@@ -321,7 +321,7 @@ public class BL implements Serializable {
      * @param ignoreCase
      */
     public void NE(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
-        if (!TypeCast.isNullOrEmpy(paramName)) {
+        if (!TypeCast.isNullOrEmpty(paramName)) {
             NE(ignoreCase, propertyName, form(paramName));
         }
     }
@@ -346,10 +346,10 @@ public class BL implements Serializable {
     public void LK(String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpy(param)) {
+            if (TypeCast.isNullOrEmpty(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpy(define)
+            if (TypeCast.isNullOrEmpty(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -380,10 +380,10 @@ public class BL implements Serializable {
     public void LKo(String lhsPropertyName, String rhsPropertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpy(param)) {
+            if (TypeCast.isNullOrEmpty(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpy(define)
+            if (TypeCast.isNullOrEmpty(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -405,10 +405,10 @@ public class BL implements Serializable {
     public void LK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpy(param)) {
+            if (TypeCast.isNullOrEmpty(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpy(define)
+            if (TypeCast.isNullOrEmpty(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -1134,7 +1134,7 @@ public class BL implements Serializable {
      */
     private String paramString(String name, String replace) throws CDCException {
         String rs = TypeCast.toString(form(name));
-        return (TypeCast.isNullOrEmpy(rs)) ? rs : replace;
+        return (TypeCast.isNullOrEmpty(rs)) ? rs : replace;
     }
 
     /**
