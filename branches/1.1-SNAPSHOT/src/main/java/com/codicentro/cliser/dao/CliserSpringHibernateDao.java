@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.slf4j.Logger;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
 
-    private Logger log = org.slf4j.LoggerFactory.getLogger(CliserSpringHibernateDao.class);
+  //  private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
 
     @Resource(name = "hibernateTemplate")
     public void setTemplate(HibernateTemplate hibernateTemplate) {
