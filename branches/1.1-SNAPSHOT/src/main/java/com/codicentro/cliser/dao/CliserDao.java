@@ -25,7 +25,7 @@ public interface CliserDao {
      * @param entity
      * @return
      */
-    public <TEntity> TEntity persist(TEntity entity);
+    public <TEntity> TEntity persist(final TEntity entity);
 
     /**
      *
@@ -33,13 +33,13 @@ public interface CliserDao {
      * @param entity
      * @return
      */
-    public <TEntity> void delete(TEntity entity);
+    public <TEntity> void delete(final TEntity entity);
 
     /**
      *
      * @param entities
      */
-    public void persist(Object[] entities);
+    public void persist(final Object[] entities);
 
     /**
      * 
@@ -47,7 +47,7 @@ public interface CliserDao {
      * @param entityClass
      * @return
      */
-    public <TEntity> List<TEntity> find(Class<TEntity> entityClass);
+    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass);
 
     /**
      *
@@ -56,7 +56,7 @@ public interface CliserDao {
      * @param id
      * @return
      */
-    public <TEntity> TEntity load(Class<TEntity> entityClass, Serializable id);
+    public <TEntity> TEntity load(final Class<TEntity> entityClass, final Serializable id);
 
     /**
      *
@@ -65,7 +65,7 @@ public interface CliserDao {
      * @param id
      * @return
      */
-    public <TEntity> TEntity get(Class<TEntity> entityClass, Serializable id);
+    public <TEntity> TEntity get(final Class<TEntity> entityClass, final Serializable id);
 
     /**
      *
@@ -73,7 +73,16 @@ public interface CliserDao {
      * @param hql
      * @return
      */
-    public <TEntity> List<TEntity> find(String hql);
+    public <TEntity> List<TEntity> find(final String hql);
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param hql
+     * @param values
+     * @return
+     */
+    public <TEntity> List<TEntity> find(final String hql, final Object... values);
 
     /**
      *
@@ -81,7 +90,16 @@ public interface CliserDao {
      * @param sql
      * @return
      */
-    public <TEntity> List<TEntity> find(StringBuilder sql);
+    public <TEntity> List<TEntity> find(final StringBuilder sql);
+
+    /**
+     * 
+     * @param <TEntity>
+     * @param eClazz
+     * @param sql
+     * @return
+     */
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
 
     /**
      *
@@ -89,7 +107,7 @@ public interface CliserDao {
      * @param criteria
      * @return
      */
-    public <TEntity> List<TEntity> find(DetachedCriteria criteria);
+    public <TEntity> List<TEntity> find(final DetachedCriteria criteria);
 
     /**
      *
@@ -99,7 +117,7 @@ public interface CliserDao {
      * @param limit
      * @return
      */
-    public <TEntity> List<TEntity> find(DetachedCriteria criteria, Integer start, Integer limit);
+    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit);
 
     /**
      * 
@@ -109,5 +127,5 @@ public interface CliserDao {
      * @param limit
      * @return
      */
-    public <TEntity> List<TEntity> find(TEntity entity, Integer start, Integer limit);
+    public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
 }
