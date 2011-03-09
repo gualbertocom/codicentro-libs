@@ -11,8 +11,9 @@
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.cliser.dao;
+package com.codicentro.cliser.dao.impl;
 
+import com.codicentro.cliser.dao.CliserDao;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
