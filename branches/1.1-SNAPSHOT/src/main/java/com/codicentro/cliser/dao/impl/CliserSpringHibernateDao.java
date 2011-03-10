@@ -17,26 +17,24 @@ import com.codicentro.cliser.dao.CliserDao;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
-import javax.annotation.Resource;
 import org.hibernate.HibernateException;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
-
-    //  private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
-    @Resource //(name = "hibernateTemplate")
-    public void setTemplate(HibernateTemplate hibernateTemplate) {
-        setHibernateTemplate(hibernateTemplate);
-    }
+public abstract class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
+//
+//    //  private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
+//    @Resource //(name = "hibernateTemplate")
+//    public void setTemplate(HibernateTemplate hibernateTemplate) {
+//        setHibernateTemplate(hibernateTemplate);
+//    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
