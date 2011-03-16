@@ -400,11 +400,32 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
+     *
+     * @param data
+     * @return
+     */
+    public static String success(String data) {
+        StringBuilder sb = new StringBuilder("{");
+        sb.append("data:").append(data);
+        sb.append(",success:").append(true);
+        sb.append("}");
+        return charSpecial(sb.toString());
+    }
+
+    public static String failed(String message) {
+        StringBuilder sb = new StringBuilder("{");
+        sb.append("message:\"").append(message).append("\"");
+        sb.append(",success:").append(false);
+        sb.append("}");
+        return charSpecial(sb.toString());
+    }
+
+    /**
      * 
      * @param r
      * @return
      */
-    private String charSpecial(String r) {
+    public static String charSpecial(String r) {
         r = r.replaceAll("\n", "\\\\n");
         r = r.replaceAll("\r\n", "\\\\n");
 
