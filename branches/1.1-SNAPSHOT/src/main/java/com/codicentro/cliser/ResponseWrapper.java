@@ -405,9 +405,14 @@ public class ResponseWrapper implements Serializable {
      * @return
      */
     public static String success(String data) {
+        return success(data, -1);
+    }
+
+    public static String success(String data, int total) {
         StringBuilder sb = new StringBuilder("{");
         sb.append("data:").append(data);
         sb.append(",success:").append(true);
+        sb.append(",rowCount:").append(total);
         sb.append("}");
         return charSpecial(sb.toString());
     }
