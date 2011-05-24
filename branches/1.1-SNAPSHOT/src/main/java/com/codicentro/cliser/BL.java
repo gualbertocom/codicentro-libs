@@ -60,7 +60,7 @@ public class BL implements Serializable {
     /*** SERVICE ***/
     private Class srvClazz = null;
     private String srvName = null;
-    private String srvMethodName = null;
+    private String srvMethodName = null; 
     private List<Object> srvParams = null;
     private List<Class> srvParamTypes = null;
     private String sessionName = null;
