@@ -10,7 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
-        <spring.framework.version>3.0.4.RELEASE</spring.framework.version>
+        <spring.framework.version>3.0.5.RELEASE</spring.framework.version>
         <spring.security.version>3.0.4.RELEASE</spring.security.version>
         <hibernate.version>3.3.2.GA</hibernate.version>
     </properties>
