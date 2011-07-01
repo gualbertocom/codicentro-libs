@@ -17,7 +17,9 @@ import com.codicentro.cliser.dao.CliserDao;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
@@ -29,13 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public abstract class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
-//
-//    //  private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
-//    @Resource //(name = "hibernateTemplate")
-//    public void setTemplate(HibernateTemplate hibernateTemplate) {
-//        setHibernateTemplate(hibernateTemplate);
-//    }
 
+//      private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <TEntity> void delete(final TEntity entity) {
@@ -121,14 +118,37 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
-       return getHibernateTemplate().executeFind(new HibernateCallback<TEntity>() {
+        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
 
             @Override
-            public TEntity doInHibernate(Session session) throws HibernateException, SQLException {
+            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
                 SQLQuery query = session.createSQLQuery(sql);
                 query.addEntity(eClazz);
-                return (TEntity) query.list();
+                return query.list();
             }
         });
     }
+
+    @Override
+    public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values) {
+
+        return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
+
+            @Override
+            public List<TEntity> doInHibernate(final Session session) throws HibernateException, SQLException {
+                Query query = session.getNamedQuery(queryName);
+                for (String key : values.keySet()) {
+                    query.setParameter(key, values.get(key));
+                }
+                return query.list();
+            }
+        });
+    }
+
+    @Override
+    public Session getHBSession() {
+        return getSession();
+    }
+    
+    
 }

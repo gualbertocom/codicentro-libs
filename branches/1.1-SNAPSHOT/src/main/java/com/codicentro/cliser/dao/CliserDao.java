@@ -15,6 +15,7 @@ package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
 
 public interface CliserDao {
@@ -128,4 +129,8 @@ public interface CliserDao {
      * @return
      */
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
+
+    public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values);
+
+    public org.hibernate.Session getHBSession();
 }
