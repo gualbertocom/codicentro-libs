@@ -453,6 +453,8 @@ public class ResponseWrapper implements Serializable {
         r = r.replaceAll("Ú", "\\\\332");
 
         r = r.replaceAll("¿", "\\\\277");
+        
+       // r = r.replaceAll("\"", "'");
         return r;
     }
 
