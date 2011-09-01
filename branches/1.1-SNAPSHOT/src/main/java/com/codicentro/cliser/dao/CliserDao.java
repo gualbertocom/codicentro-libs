@@ -130,7 +130,23 @@ public interface CliserDao {
      */
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
 
+    /**
+     * 
+     * @param <TEntity>
+     * @param queryName
+     * @param values
+     * @return 
+     */
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values);
 
+    /**
+     * 
+     * @return 
+     */
     public org.hibernate.Session getHBSession();
+
+    /**
+     * 
+     */
+    public int execute(final StringBuilder sql);
 }

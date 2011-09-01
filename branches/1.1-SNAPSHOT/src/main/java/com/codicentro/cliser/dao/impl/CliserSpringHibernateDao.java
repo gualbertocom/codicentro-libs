@@ -149,6 +149,12 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public Session getHBSession() {
         return getSession();
     }
-    
-    
+
+    @Override
+    public int execute(StringBuilder sql) {
+        Session session = getSessionFactory().openSession();
+        SQLQuery query = session.createSQLQuery(sql.toString());
+        return query.executeUpdate();
+        
+    }
 }
