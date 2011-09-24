@@ -103,6 +103,11 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
 
     /**
+     * 
+     */
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
+
+    /**
      *
      * @param <TEntity>
      * @param criteria

@@ -130,6 +130,22 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params) {
+        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
+
+            @Override
+            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery query = session.createSQLQuery(sql);
+                query.addEntity(eClazz);
+                for (int idx = 0; idx < params.length; idx++) {
+                    query.setParameter(idx + 1, params[idx]);
+                }
+                return query.list();
+            }
+        });
+    }
+
+    @Override
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values) {
 
         return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
@@ -155,6 +171,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         Session session = getSessionFactory().openSession();
         SQLQuery query = session.createSQLQuery(sql.toString());
         return query.executeUpdate();
-        
+
     }
 }
