@@ -138,7 +138,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
                 SQLQuery query = session.createSQLQuery(sql);
                 query.addEntity(eClazz);
                 for (int idx = 0; idx < params.length; idx++) {
-                    query.setParameter(idx + 1, params[idx]);
+                    query.setParameter(idx, params[idx]);
                 }
                 return query.list();
             }
