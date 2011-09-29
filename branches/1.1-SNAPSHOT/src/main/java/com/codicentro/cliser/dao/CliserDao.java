@@ -26,7 +26,7 @@ public interface CliserDao {
      * @param entity
      * @return
      */
-    public <TEntity> TEntity persist(final TEntity entity);
+    public <TEntity> TEntity persist(TEntity entity);
 
     /**
      *
@@ -40,7 +40,7 @@ public interface CliserDao {
      *
      * @param entities
      */
-    public void persist(final Object[] entities);
+    public <TEntity> void persist(TEntity[] entities);
 
     /**
      * 

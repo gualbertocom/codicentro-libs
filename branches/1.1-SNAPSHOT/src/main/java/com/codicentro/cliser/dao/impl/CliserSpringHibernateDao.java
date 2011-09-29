@@ -41,16 +41,22 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public <TEntity> TEntity persist(final TEntity entity) {
+    public <TEntity> TEntity persist(TEntity entity) {
         getHibernateTemplate().saveOrUpdate(entity);
         return entity;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void persist(final Object[] entities) {
-        for (int i = 0; i < entities.length; i++) {
-            persist(entities[i]);
+    public <TEntity> void persist(TEntity[] entities) {
+        TEntity entity = null;
+        try {
+            for (int idx = 0; idx < entities.length; idx++) {
+                entity = entities[idx];
+                persist(entity);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(entity.toString(), ex);
         }
     }
 
