@@ -37,6 +37,13 @@ public interface CliserDao {
     public <TEntity> void delete(final TEntity entity);
 
     /**
+     * 
+     * @param <TEntity>
+     * @param entity 
+     */
+    public <TEntity> void delete(final TEntity[] entity);
+
+    /**
      *
      * @param entities
      */
