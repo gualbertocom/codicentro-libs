@@ -161,4 +161,8 @@ public interface CliserDao {
      * 
      */
     public int execute(final StringBuilder sql);
+
+    public int execute(final StringBuilder sql, Object value);
+
+    public int execute(final StringBuilder sql, Object... values);
 }

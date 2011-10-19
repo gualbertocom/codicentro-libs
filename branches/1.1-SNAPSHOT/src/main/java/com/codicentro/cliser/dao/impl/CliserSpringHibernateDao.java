@@ -116,11 +116,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> find(final StringBuilder sql) {
-        Session session = getSessionFactory().openSession();
-        SQLQuery query = session.createSQLQuery(sql.toString());
-        final List<TEntity> entities = query.list();
-        session.close();
-        return entities;
+        return (List<TEntity>) find(Serializable.class, sql.toString());
     }
 
     @Transactional(readOnly = true)
@@ -161,7 +157,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values) {
-
         return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
 
             @Override
@@ -182,15 +177,16 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public int execute(StringBuilder sql) {
-        Session session = getSessionFactory().openSession();
-        try {
-            SQLQuery query = session.createSQLQuery(sql.toString());
-            int rs = query.executeUpdate();
-            return rs;
-        } catch (Exception ex) {
-            return -1;
-        } finally {
-            session.close();
-        }
+        return getHibernateTemplate().bulkUpdate(sql.toString());
+    }
+
+    @Override
+    public int execute(StringBuilder sql, Object value) {
+        return getHibernateTemplate().bulkUpdate(sql.toString(), value);
+    }
+
+    @Override
+    public int execute(StringBuilder sql, Object... values) {
+        return getHibernateTemplate().bulkUpdate(sql.toString(), values);
     }
 }
