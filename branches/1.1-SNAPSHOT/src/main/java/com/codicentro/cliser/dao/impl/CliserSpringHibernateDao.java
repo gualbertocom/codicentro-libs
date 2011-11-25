@@ -189,4 +189,16 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public int execute(StringBuilder sql, Object... values) {
         return getHibernateTemplate().bulkUpdate(sql.toString(), values);
     }
+
+    @Override
+    public <TEntity> List<TEntity> query(final String sql) {
+        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
+
+            @Override
+            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery query = session.createSQLQuery(sql);
+                return query.list();
+            }
+        });
+    }
 }

@@ -97,8 +97,11 @@ public interface CliserDao {
      * @param <TEntity>
      * @param sql
      * @return
+     * @deprecated 
      */
     public <TEntity> List<TEntity> find(final StringBuilder sql);
+
+    public <TEntity> List<TEntity> query(final String sql);
 
     /**
      * 
