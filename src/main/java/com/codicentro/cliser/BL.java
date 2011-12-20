@@ -14,9 +14,9 @@
 package com.codicentro.cliser;
 
 import com.codicentro.cliser.dao.CliserDao;
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.Types.DBProtocolType;
+import com.codicentro.utils.CDCException;
+import com.codicentro.utils.TypeCast;
+import com.codicentro.utils.Types.DBProtocolType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -60,7 +60,7 @@ public class BL implements Serializable {
     /*** SERVICE ***/
     private Class srvClazz = null;
     private String srvName = null;
-    private String srvMethodName = null; 
+    private String srvMethodName = null;
     private List<Object> srvParams = null;
     private List<Class> srvParamTypes = null;
     private String sessionName = null;
@@ -119,19 +119,6 @@ public class BL implements Serializable {
     public <TEntity> void entity(Class<TEntity> eClazz, String eClazzAlia) {
         entity(eClazz);
         this.eClazzAlia = eClazzAlia;
-    }
-
-    /**
-     * 
-     * @param <TEntity>
-     * @param eClazz
-     * @param id
-     * @return
-     * @throws CDCException
-     */
-    public <TEntity> TEntity entity(Serializable id, Class<TEntity> eClazz) throws CDCException {
-        entity(eClazz);
-        return (TEntity) dao.get(eClazz, id);
     }
 
     /**
@@ -211,7 +198,7 @@ public class BL implements Serializable {
      * @param ignoreCase
      */
     public void EQ(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
-        if (!TypeCast.isNullOrEmpty(paramName)) {
+        if (!TypeCast.isNullOrEmpy(paramName)) {
             EQ(ignoreCase, propertyName, form(paramName));
         }
     }
@@ -321,7 +308,7 @@ public class BL implements Serializable {
      * @param ignoreCase
      */
     public void NE(String propertyName, String paramName, boolean ignoreCase) throws CDCException {
-        if (!TypeCast.isNullOrEmpty(paramName)) {
+        if (!TypeCast.isNullOrEmpy(paramName)) {
             NE(ignoreCase, propertyName, form(paramName));
         }
     }
@@ -346,10 +333,10 @@ public class BL implements Serializable {
     public void LK(String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpty(param)) {
+            if (TypeCast.isNullOrEmpy(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpty(define)
+            if (TypeCast.isNullOrEmpy(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -380,10 +367,10 @@ public class BL implements Serializable {
     public void LKo(String lhsPropertyName, String rhsPropertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpty(param)) {
+            if (TypeCast.isNullOrEmpy(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpty(define)
+            if (TypeCast.isNullOrEmpy(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -405,10 +392,10 @@ public class BL implements Serializable {
     public void LK(String propertyNameJoin, String propertyName, String paramName, String define, boolean ignoreCase) throws CDCException {
         if (paramName != null) {
             String param = paramString(paramName);
-            if (TypeCast.isNullOrEmpty(param)) {
+            if (TypeCast.isNullOrEmpy(param)) {
                 return;
             }
-            if (TypeCast.isNullOrEmpty(define)
+            if (TypeCast.isNullOrEmpy(define)
                     || ((define.indexOf("?%") == -1)
                     && (define.indexOf("%?") == -1)
                     && (define.indexOf("%?%") == -1))) {
@@ -736,10 +723,6 @@ public class BL implements Serializable {
      */
     public <TEntity> void write(List<TEntity> pojos) throws CDCException {
         responseWrapper.setDataJSON(eClazz, eClazzAlia, pojos);
-    }
-
-    public <TEntity> void write(TEntity pojo) throws CDCException {
-        responseWrapper.setDataJSON(pojo, eClazz, eClazzAlia);
     }
 
     /**
@@ -1134,7 +1117,7 @@ public class BL implements Serializable {
      */
     private String paramString(String name, String replace) throws CDCException {
         String rs = TypeCast.toString(form(name));
-        return (TypeCast.isNullOrEmpty(rs)) ? rs : replace;
+        return (TypeCast.isNullOrEmpy(rs)) ? rs : replace;
     }
 
     /**

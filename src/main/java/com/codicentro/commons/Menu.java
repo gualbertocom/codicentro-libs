@@ -14,9 +14,9 @@
  **/
 package com.codicentro.commons;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.model.Table;
+import com.codicentro.model.Table;
+import com.codicentro.utils.CDCException;
+import com.codicentro.utils.TypeCast;
 import java.io.Serializable;
 
 public class Menu implements Serializable {

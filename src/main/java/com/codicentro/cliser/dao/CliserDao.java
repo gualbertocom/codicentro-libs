@@ -10,12 +10,11 @@
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
- **/
+  **/
 package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
 
 public interface CliserDao {
@@ -34,20 +33,13 @@ public interface CliserDao {
      * @param entity
      * @return
      */
-    public <TEntity> void delete(final TEntity entity);
-
-    /**
-     * 
-     * @param <TEntity>
-     * @param entity 
-     */
-    public <TEntity> void delete(final TEntity[] entity);
+    public <TEntity> void delete(TEntity entity);
 
     /**
      *
      * @param entities
      */
-    public <TEntity> void persist(TEntity[] entities);
+    public void persist(Object[] entities);
 
     /**
      * 
@@ -55,16 +47,7 @@ public interface CliserDao {
      * @param entityClass
      * @return
      */
-    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass);
-
-    /**
-     *
-     * @param <TEntity>
-     * @param entityClass
-     * @param id
-     * @return
-     */
-    public <TEntity> TEntity load(final Class<TEntity> entityClass, final Serializable id);
+    public <TEntity> List<TEntity> find(Class<TEntity> entityClass);
 
     /**
      *
@@ -73,7 +56,16 @@ public interface CliserDao {
      * @param id
      * @return
      */
-    public <TEntity> TEntity get(final Class<TEntity> entityClass, final Serializable id);
+    public <TEntity> TEntity load(Class<TEntity> entityClass, Serializable id);
+
+    /**
+     *
+     * @param <TEntity>
+     * @param entityClass
+     * @param id
+     * @return
+     */
+    public <TEntity> TEntity get(Class<TEntity> entityClass, Serializable id);
 
     /**
      *
@@ -81,41 +73,9 @@ public interface CliserDao {
      * @param hql
      * @return
      */
-    public <TEntity> List<TEntity> find(final String hql);
+    public <TEntity> List<TEntity> find(String hql);
 
-    /**
-     * 
-     * @param <TEntity>
-     * @param hql
-     * @param values
-     * @return
-     */
-    public <TEntity> List<TEntity> find(final String hql, final Object... values);
-
-    /**
-     *
-     * @param <TEntity>
-     * @param sql
-     * @return
-     * @deprecated 
-     */
-    public <TEntity> List<TEntity> find(final StringBuilder sql);
-
-    public <TEntity> List<TEntity> query(final String sql);
-
-    /**
-     * 
-     * @param <TEntity>
-     * @param eClazz
-     * @param sql
-     * @return
-     */
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
-
-    /**
-     * 
-     */
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
+    public <TEntity> List<TEntity> find(StringBuilder sql);
 
     /**
      *
@@ -123,7 +83,7 @@ public interface CliserDao {
      * @param criteria
      * @return
      */
-    public <TEntity> List<TEntity> find(final DetachedCriteria criteria);
+    public <TEntity> List<TEntity> find(DetachedCriteria criteria);
 
     /**
      *
@@ -133,7 +93,7 @@ public interface CliserDao {
      * @param limit
      * @return
      */
-    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit);
+    public <TEntity> List<TEntity> find(DetachedCriteria criteria, Integer start, Integer limit);
 
     /**
      * 
@@ -143,29 +103,5 @@ public interface CliserDao {
      * @param limit
      * @return
      */
-    public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
-
-    /**
-     * 
-     * @param <TEntity>
-     * @param queryName
-     * @param values
-     * @return 
-     */
-    public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values);
-
-    /**
-     * 
-     * @return 
-     */
-    public org.hibernate.Session getHBSession();
-
-    /**
-     * 
-     */
-    public int execute(final StringBuilder sql);
-
-    public int execute(final StringBuilder sql, Object value);
-
-    public int execute(final StringBuilder sql, Object... values);
+    public <TEntity> List<TEntity> find(TEntity entity, Integer start, Integer limit);
 }

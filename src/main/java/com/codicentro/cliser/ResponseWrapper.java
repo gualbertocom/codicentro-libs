@@ -14,14 +14,14 @@
  **/
 package com.codicentro.cliser;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.model.Table;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletResponse;
+import com.codicentro.model.Table;
+import com.codicentro.utils.CDCException;
+import com.codicentro.utils.TypeCast;
 import flexjson.JSONSerializer;
 import flexjson.transformer.DateTransformer;
 import java.util.ArrayList;
@@ -147,33 +147,17 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     *
-     * @param <TEntity>
-     * @param eClazz
-     * @param eClazzAlia
-     * @param pojo
-     */
-    public <TEntity> void setDataJSON(TEntity pojo, Class<TEntity> eClazz, String eClazzAlia) {
-        eClazzAlia = (eClazzAlia == null) ? eClazz.getSimpleName() : eClazzAlia;
-        dataJSON(eClazzAlia, pojo);
-    }
-
-    private void initializeJSON(String eClazzAlia) {
-        dataJSON.rootName(eClazzAlia);
-        dataJSON.setIncludes(includes);
-        dataJSON.setExcludes(excludes);
-        dataJSON.transform(new DateTransformer(dateFormat), Date.class);
-        dataJSON.setAlias(mAlias);
-    }
-
-    /**
      * 
      * @param <TEntity>
      * @param eClazzAlia
      * @param pojos
      */
     private <TEntity> void dataJSON(String eClazzAlia, List<TEntity> pojos) {
-        initializeJSON(eClazzAlia);
+        dataJSON.rootName(eClazzAlia);
+        dataJSON.setIncludes(includes);
+        dataJSON.setExcludes(excludes);
+        dataJSON.transform(new DateTransformer(dateFormat), Date.class);
+        dataJSON.setAlias(mAlias);
         if (!pojos.isEmpty()) {
             StringBuilder out = new StringBuilder();
             if (deepSerializer) {
@@ -189,36 +173,9 @@ public class ResponseWrapper implements Serializable {
                 data.add(out.toString());
             }
         } else {
-            data.add(eClazzAlia + ":[]");
+            data.add("\"" + eClazzAlia + "\":[]");
         }
 
-    }
-
-    /**
-     * 
-     * @param <TEntity>
-     * @param eClazzAlia
-     * @param pojo
-     */
-    private <TEntity> void dataJSON(String eClazzAlia, TEntity pojo) {
-        initializeJSON(eClazzAlia);
-        if (pojo != null) {
-            StringBuilder out = new StringBuilder();
-            if (deepSerializer) {
-                log.info("/* DEEP SERIALIZER */");
-                dataJSON.deepSerialize(pojo, out);
-            } else {
-                log.info("/* SERIALIZER */");
-                dataJSON.serialize(pojo, out);
-            }
-            if (out.toString().startsWith("{")) {
-                data.add(out.toString().substring(1, out.toString().length() - 1));
-            } else {
-                data.add(out.toString());
-            }
-        } else {
-            data.add(eClazzAlia + ":[]");
-        }
     }
 
     /**
@@ -353,23 +310,23 @@ public class ResponseWrapper implements Serializable {
             if (callback != null) {
                 json.append(callback).append("(");
             }
-            json.append("{version:1.0");
-            json.append(",success:").append(success);
-            json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
-            json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
+            json.append("{\"version\":1.0");
+            json.append(",\"success\":").append(success);
+            json.append(",\"tracer\":[").append(((tracert == null) ? "" : tracert.toString())).append("]");
+            json.append(",\"message\":[").append(((message == null) ? "" : message.toString())).append("]");
             //json.append(",data:[");
             String tmpData = null;
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
                 tmpData = i.next();
-                if (!TypeCast.isNullOrEmpty(tmpData)) {
+                if (!TypeCast.isNullOrEmpy(tmpData)) {
                     json.append(",").append(tmpData);
                 }
             }
             //json.append("]");
-            json.append(",rowCount:").append(rowCount);
-            json.append(",colCount:").append(colCount);
-            json.append(",page:").append(page);
-            json.append(",pageSize:").append(pageSize);
+            json.append(",\"rowCount\":").append(rowCount);
+            json.append(",\"colCount\":").append(colCount);
+            json.append(",\"page\":").append(page);
+            json.append(",\"pageSize\":").append(pageSize);
             json.append("}");
             if (callback != null) {
                 json.append(");");
@@ -400,37 +357,11 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     *
-     * @param data
-     * @return
-     */
-    public static String success(String data) {
-        return success(data, -1);
-    }
-
-    public static String success(String data, int total) {
-        StringBuilder sb = new StringBuilder("{");
-        sb.append("data:").append(data);
-        sb.append(",success:").append(true);
-        sb.append(",rowCount:").append(total);
-        sb.append("}");
-        return charSpecial(sb.toString());
-    }
-
-    public static String failed(String message) {
-        StringBuilder sb = new StringBuilder("{");
-        sb.append("message:\"").append(message).append("\"");
-        sb.append(",success:").append(false);
-        sb.append("}");
-        return charSpecial(sb.toString());
-    }
-
-    /**
      * 
      * @param r
      * @return
      */
-    public static String charSpecial(String r) {
+    private String charSpecial(String r) {
         r = r.replaceAll("\n", "\\\\n");
         r = r.replaceAll("\r\n", "\\\\n");
 
@@ -453,8 +384,6 @@ public class ResponseWrapper implements Serializable {
         r = r.replaceAll("Ú", "\\\\332");
 
         r = r.replaceAll("¿", "\\\\277");
-        
-       // r = r.replaceAll("\"", "'");
         return r;
     }
 

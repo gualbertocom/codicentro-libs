@@ -14,9 +14,9 @@
  **/
 package com.codicentro.cliser;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.Types.DBProtocolType;
+import com.codicentro.utils.CDCException;
+import com.codicentro.utils.TypeCast;
+import com.codicentro.utils.Types.DBProtocolType;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +50,7 @@ public class CliserServlet extends HttpServlet {
     private WebApplicationContext wac = null;
     private String dateFormat = null;
     private String callback = null;
-    private Map<String, BLClass> mBLs = null;
+    private Map<String, String> mBLs = null;
     private StringBuilder errBuf = null;
     private String IU = "getIU";
 
@@ -109,15 +109,14 @@ public class CliserServlet extends HttpServlet {
             errBuf.append("\n******************\n");
             errBuf.append("* Business logic *\n");
             errBuf.append("******************\n");
-            mBLs = new HashMap<String, BLClass>();
+            mBLs = new HashMap<String, String>();
             Iterator iRootBLs = fConfig.getChildren("business-logic").iterator();
             String name = null;
             String schema = null;
             String rootPackage = null;
             String blPackage = null;
-            boolean publicAccess = false;
             String idBL = null;
-            BLClass blClass = null;
+            String className = null;
             Element eRootBL = null;
             Element eBL = null;
             Iterator iBLs = null;
@@ -130,19 +129,17 @@ public class CliserServlet extends HttpServlet {
                     eBL = (Element) iBLs.next();
                     blPackage = ((eBL.getAttribute("package") != null) ? eBL.getAttribute("package").getValue() : null);
                     schema = ((eBL.getAttribute("schema") != null) ? eBL.getAttribute("schema").getValue() : null);
-                    publicAccess = ((eBL.getAttribute("publicAccess") != null) ? TypeCast.toBoolean(eBL.getAttribute("publicAccess").getValue()) : false);
                     name = ((eBL.getValue() != null) ? eBL.getValue() : "");
                     idBL = ((schema != null) ? schema : "") + name;
-                    blClass = new BLClass(((blPackage != null) ? blPackage + "." : ((rootPackage != null) ? rootPackage + "." : "")) + idBL + "BL");
+                    className = ((blPackage != null) ? blPackage + "." : ((rootPackage != null) ? rootPackage + "." : "")) + idBL + "BL";
                     errBuf.append("ID: ").append(idBL);
                     errBuf.append((blPackage != null) ? ", Package: " + blPackage : "");
-                    errBuf.append(", Name: ").append(blClass).append("\n");
+                    errBuf.append(", Name: ").append(className).append("\n");
                     if (mBLs.containsKey(idBL)) {
                         log.error("Error: Duplicate business logic " + idBL + ".");
                         throw new CDCException("Error: Duplicate business logic " + idBL + ".");
                     }
-                    blClass.setPublicAccess(publicAccess);
-                    mBLs.put(idBL, blClass);
+                    mBLs.put(idBL, className);
                 }
             }
             log.info(errBuf.toString());
@@ -184,7 +181,7 @@ public class CliserServlet extends HttpServlet {
      */
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idBL = null;
-        BLClass blClass = null;
+        String className = null;
         String methodName = null;
         rw = null;
         try {
@@ -193,8 +190,8 @@ public class CliserServlet extends HttpServlet {
             if (!mBLs.containsKey(idBL)) {
                 throw new CDCException("Business logic " + idBL + " not found.");
             }
-            blClass = mBLs.get(idBL);
-            BL _cliser = (BL) Class.forName(blClass.getName()).newInstance();
+            className = mBLs.get(idBL);
+            BL _cliser = (BL) Class.forName(className).newInstance();
             _cliser.setResquestWrapper(request);
             _cliser.setResponseWrapper(response);
             _cliser.setWac(wac);
@@ -203,9 +200,6 @@ public class CliserServlet extends HttpServlet {
             _cliser.setDBVersion(dbVersion);
             _cliser.setSessionName(sessionName);
             _cliser.setNameIU(IU);
-            if (!blClass.isPublicAccess()) {
-                _cliser.checkSession();
-            }
             methodName = TypeCast.toString(_cliser.form(controllerParamName));
             if (methodName == null) {
                 throw new CDCException("Could not find the controller for the parameter name \"" + controllerParamName + "\".");
@@ -231,7 +225,7 @@ public class CliserServlet extends HttpServlet {
         } catch (NoSuchMethodException ex) {
             log.error(ex.getMessage(), ex);
             rw = new ResponseWrapper(response, callback);
-            rw.setMessage("Controller \"" + methodName + "\" not found in businnes logic \"" + blClass.getName() + "\".", false);
+            rw.setMessage("Controller \"" + methodName + "\" not found in businnes logic \"" + className + "\".", false);
         } catch (SecurityException ex) {
             log.error(ex.getMessage(), ex);
             rw = new ResponseWrapper(response, callback);
@@ -239,7 +233,7 @@ public class CliserServlet extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             log.error(ex.getMessage(), ex);
             rw = new ResponseWrapper(response, callback);
-            rw.setMessage("Class businnes logic \"" + blClass.getName() + "\" not found.", false);
+            rw.setMessage("Class businnes logic \"" + className + "\" not found.", false);
         } catch (CDCException ex) {
             log.error(ex.getMessage(), ex);
             rw = new ResponseWrapper(response, callback);
