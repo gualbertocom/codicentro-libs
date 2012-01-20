@@ -347,9 +347,9 @@ public class ResponseWrapper implements Serializable {
      * @return
      */
     public void commit() throws CDCException {
-        StringBuilder json = null;
+        
         try {
-            json = new StringBuilder();
+            StringBuilder json = new StringBuilder();
             if (callback != null) {
                 json.append(callback).append("(");
             }
@@ -357,10 +357,9 @@ public class ResponseWrapper implements Serializable {
             json.append(",success:").append(success);
             json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
             json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
-            //json.append(",data:[");
-            String tmpData = null;
+            //json.append(",data:[");           
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
-                tmpData = i.next();
+                String tmpData = i.next();
                 if (!TypeCast.isNullOrEmpty(tmpData)) {
                     json.append(",").append(tmpData);
                 }
@@ -394,8 +393,7 @@ public class ResponseWrapper implements Serializable {
             colCount = -1;
             success = true;
             response = null;
-            writer = null;
-            json = null;
+            writer = null;           
         }
     }
 
