@@ -1,16 +1,12 @@
 /**
- * Author: Alexander Villalobos Yadró
- * E-Mail: avyadro@yahoo.com.mx
- * Created on 03/08/2010, 10:52:52 AM
- * Place: Toluca, Estado de Mexico, Mexico.
- * Company: Codicentro
- * Web: http://www.codicentro.com
- * Class Name: CliserSpringHibernateDao.java
- * Purpose:
- * Revisions:
- * Ver        Date               Author                                      Description
- * ---------  ---------------  -----------------------------------  ------------------------------------
- **/
+ * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
+ * 03/08/2010, 10:52:52 AM Place: Toluca, Estado de Mexico, Mexico. Company:
+ * Codicentro Web: http://www.codicentro.com Class Name:
+ * CliserSpringHibernateDao.java Purpose: Revisions: Ver Date Author Description
+ * --------- --------------- -----------------------------------
+ * ------------------------------------
+ *
+ */
 package com.codicentro.cliser.dao.impl;
 
 import com.codicentro.cliser.dao.CliserDao;
@@ -70,23 +66,20 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(readOnly = true)
     @Override
-    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass) {
-        final List<TEntity> entities = getHibernateTemplate().loadAll(entityClass);
-        return entities;
+    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass) {        
+        return getHibernateTemplate().loadAll(entityClass);
     }
 
     @Transactional(readOnly = true)
     @Override
     public <TEntity> TEntity load(final Class<TEntity> entityClass, final Serializable id) {
-        final TEntity entity = (TEntity) getHibernateTemplate().load(entityClass, id);
-        return entity;
+        return getHibernateTemplate().load(entityClass, id);
     }
 
     @Transactional(readOnly = true)
     @Override
     public <TEntity> TEntity get(final Class<TEntity> entityClass, final Serializable id) {
-        final TEntity entity = (TEntity) getHibernateTemplate().get(entityClass, id);
-        return entity;
+        return getHibernateTemplate().get(entityClass, id);
     }
 
     @Transactional(readOnly = true)
@@ -98,9 +91,8 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(readOnly = true)
     @Override
-    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit) {
-        final List<TEntity> entities = getHibernateTemplate().findByCriteria(criteria, start, limit);
-        return entities;
+    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit) {        
+        return getHibernateTemplate().findByCriteria(criteria, start, limit);
     }
 
     @Override
@@ -110,8 +102,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit) {
-        final List<TEntity> entities = getHibernateTemplate().findByExample(entity, start, limit);
-        return entities;
+        return getHibernateTemplate().findByExample(entity, start, limit);
     }
 
     @Override
@@ -122,8 +113,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql, final Object... values) {
-        final List<TEntity> entities = getHibernateTemplate().find(hql, values);
-        return entities;
+        return getHibernateTemplate().find(hql, values);
     }
 
     @Override
