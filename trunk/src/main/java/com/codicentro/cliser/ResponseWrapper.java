@@ -1,17 +1,12 @@
 /**
- * Author: Alexander Villalobos Yadró
- * E-Mail: avyadro@yahoo.com.mx
- * Created on Oct 01, 2008, 10:27:26 AM
- * Place: Querétaro, Querétaro, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
- * Class Name: ResponseWrapper.java
- * Purpose:
- * Revisions:
- * Ver        Date               Author                                      Description
- * ---------  ---------------  -----------------------------------  ------------------------------------
- * 1.0.0       Oct 01, 2008           Alexander Villalobos Yadró      New class.
- **/
+ * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
+ * Oct 01, 2008, 10:27:26 AM Place: Querétaro, Querétaro, México. Company:
+ * Codicentro Web: http://www.codicentro.com Class Name: ResponseWrapper.java
+ * Purpose: Revisions: Ver Date Author Description --------- ---------------
+ * ----------------------------------- ------------------------------------
+ * 1.0.0 Oct 01, 2008 Alexander Villalobos Yadró New class.
+ *
+ */
 package com.codicentro.cliser;
 
 import com.codicentro.core.CDCException;
@@ -75,7 +70,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param field
      */
     public void addExclude(String field) {
@@ -83,7 +78,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param field
      */
     public void addInclude(String field) {
@@ -108,7 +103,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public JSONSerializer getJSON() {
@@ -125,7 +120,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazz
      * @param pojos
@@ -167,7 +162,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazzAlia
      * @param pojos
@@ -195,7 +190,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazzAlia
      * @param pojo
@@ -257,7 +252,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param page
      */
     public void setPage(int page) {
@@ -269,7 +264,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param pageSize
      */
     public void setPageSize(int pageSize) {
@@ -295,7 +290,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param e
      */
     public void setMessage(Exception e) {
@@ -307,7 +302,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param message
      * @param success
      */
@@ -321,9 +316,8 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
-     * @return
-     * @throws CDCException
+     *
+     * @return @throws CDCException
      */
     public PrintWriter getWriter() throws CDCException {
         try {
@@ -335,11 +329,42 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public HttpServletResponse getResponse() {
         return response;
+    }
+
+    public String toJSON() throws CDCException {
+        try {
+            StringBuilder json = new StringBuilder();
+            if (callback != null) {
+                json.append(callback).append("(");
+            }
+            json.append("{\"version\":1.0");
+            json.append(",\"success\":").append(success);
+            json.append(",\"tracer\":[").append(((tracert == null) ? "" : tracert.toString())).append("]");
+            json.append(",\"message\":[").append(((message == null) ? "" : message.toString())).append("]");
+            for (Iterator<String> i = data.iterator(); i.hasNext();) {
+                String tmpData = i.next();
+                if (!TypeCast.isNullOrEmpty(tmpData)) {
+                    json.append(",").append(tmpData);
+                }
+            }
+            json.append(",\"rowCount\":").append(rowCount);
+            json.append(",\"colCount\":").append(colCount);
+            json.append(",\"page\":").append(page);
+            json.append(",\"pageSize\":").append(pageSize);
+            json.append("}");
+            if (callback != null) {
+                json.append(");");
+            }
+            return charSpecial(json.toString());
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            throw new CDCException(ex);
+        }
     }
 
     /**
@@ -347,53 +372,18 @@ public class ResponseWrapper implements Serializable {
      * @return
      */
     public void commit() throws CDCException {
-        
         try {
-            StringBuilder json = new StringBuilder();
-            if (callback != null) {
-                json.append(callback).append("(");
-            }
-            json.append("{version:1.0");
-            json.append(",success:").append(success);
-            json.append(",tracer:[").append(((tracert == null) ? "" : tracert.toString())).append("]");
-            json.append(",message:[").append(((message == null) ? "" : message.toString())).append("]");
-            //json.append(",data:[");           
-            for (Iterator<String> i = data.iterator(); i.hasNext();) {
-                String tmpData = i.next();
-                if (!TypeCast.isNullOrEmpty(tmpData)) {
-                    json.append(",").append(tmpData);
-                }
-            }
-            //json.append("]");
-            json.append(",rowCount:").append(rowCount);
-            json.append(",colCount:").append(colCount);
-            json.append(",page:").append(page);
-            json.append(",pageSize:").append(pageSize);
-            json.append("}");
-            if (callback != null) {
-                json.append(");");
-            }
             response.setHeader("Content-Type", "text/html");
             response.setHeader("Expires", "Mon, 01 Jan 2007 01:00:00 GMT");
             response.setHeader("Cache-Control", "must-revalidate");
             response.setHeader("Cache-Control", "no-cache");
             response.setHeader("Access-Control-Allow-Origin", "*");
-
             writer = response.getWriter();
-            writer.print(charSpecial(json.toString()));
+            writer.print(toJSON());
             writer.flush();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             throw new CDCException(ex);
-        } finally {
-            message = null;
-            tracert = null;
-            data = null;
-            rowCount = -1;
-            colCount = -1;
-            success = true;
-            response = null;
-            writer = null;           
         }
     }
 
@@ -424,7 +414,7 @@ public class ResponseWrapper implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param r
      * @return
      */
@@ -451,8 +441,8 @@ public class ResponseWrapper implements Serializable {
         r = r.replaceAll("Ú", "\\\\332");
 
         r = r.replaceAll("¿", "\\\\277");
-        
-       // r = r.replaceAll("\"", "'");
+
+        // r = r.replaceAll("\"", "'");
         return r;
     }
 
