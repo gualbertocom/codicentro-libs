@@ -1,16 +1,11 @@
 /**
- * Author: Alexander Villalobos Yadró
- * E-Mail: avyadro@yahoo.com.mx
- * Created on 03/08/2010, 10:52:52 AM
- * Place: Toluca, Estado de Mexico, Mexico.
- * Company: Codicentro
- * Web: http://www.codicentro.com
- * Class Name: CliserDao.java
- * Purpose:
- * Revisions:
- * Ver        Date               Author                                      Description
- * ---------  ---------------  -----------------------------------  ------------------------------------
- **/
+ * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
+ * 03/08/2010, 10:52:52 AM Place: Toluca, Estado de Mexico, Mexico. Company:
+ * Codicentro Web: http://www.codicentro.com Class Name: CliserDao.java Purpose:
+ * Revisions: Ver Date Author Description --------- ---------------
+ * ----------------------------------- ------------------------------------
+ *
+ */
 package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
@@ -37,9 +32,9 @@ public interface CliserDao {
     public <TEntity> void delete(final TEntity entity);
 
     /**
-     * 
+     *
      * @param <TEntity>
-     * @param entity 
+     * @param entity
      */
     public <TEntity> void delete(final TEntity[] entity);
 
@@ -50,7 +45,7 @@ public interface CliserDao {
     public <TEntity> void persist(TEntity[] entities);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param entityClass
      * @return
@@ -84,7 +79,7 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final String hql);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param hql
      * @param values
@@ -93,18 +88,12 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final String hql, final Object... values);
 
     /**
-     *
-     * @param <TEntity>
-     * @param sql
-     * @return
-     * @deprecated 
+     * 
      */
-    public <TEntity> List<TEntity> find(final StringBuilder sql);
-
-    public <TEntity> List<TEntity> query(final String sql);
+    public List<?> find(final StringBuilder sql);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazz
      * @param sql
@@ -113,7 +102,7 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
 
     /**
-     * 
+     *
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
 
@@ -136,7 +125,7 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param entity
      * @param start
@@ -146,22 +135,22 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param queryName
      * @param values
-     * @return 
+     * @return
      */
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values);
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public org.hibernate.Session getHBSession();
 
     /**
-     * 
+     *
      */
     public int execute(final StringBuilder sql);
 

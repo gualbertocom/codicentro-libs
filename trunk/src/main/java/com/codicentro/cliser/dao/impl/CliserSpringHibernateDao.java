@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public abstract class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
 
-//      private Logger logger = LoggerFactory.getLogger(CliserSpringHibernateDao.class);
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <TEntity> void delete(final TEntity entity) {
@@ -66,7 +65,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(readOnly = true)
     @Override
-    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass) {        
+    public <TEntity> List<TEntity> find(final Class<TEntity> entityClass) {
         return getHibernateTemplate().loadAll(entityClass);
     }
 
@@ -91,7 +90,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(readOnly = true)
     @Override
-    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit) {        
+    public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit) {
         return getHibernateTemplate().findByCriteria(criteria, start, limit);
     }
 
@@ -103,11 +102,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit) {
         return getHibernateTemplate().findByExample(entity, start, limit);
-    }
-
-    @Override
-    public <TEntity> List<TEntity> find(final StringBuilder sql) {
-        return (List<TEntity>) find(Serializable.class, sql.toString());
     }
 
     @Transactional(readOnly = true)
@@ -194,12 +188,12 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
-    public <TEntity> List<TEntity> query(final String sql) {
-        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
+    public List<?> find(final StringBuilder sql) {
+        return getHibernateTemplate().executeFind(new HibernateCallback<List<?>>() {
 
             @Override
-            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery query = session.createSQLQuery(sql);
+            public List<?> doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery query = session.createSQLQuery(sql.toString());
                 return query.list();
             }
         });

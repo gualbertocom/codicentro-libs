@@ -419,6 +419,9 @@ public class ResponseWrapper implements Serializable {
      * @return
      */
     public static String charSpecial(String r) {
+        if (TypeCast.isNullOrEmpty(r)) {
+            return null;
+        }
         r = r.replaceAll("\n", "\\\\n");
         r = r.replaceAll("\r\n", "\\\\n");
 

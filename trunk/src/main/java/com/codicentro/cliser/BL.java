@@ -811,7 +811,7 @@ public class BL implements Serializable {
             throw new CDCException("cliser.msg.error.dao.notinitialized");
         }
         /*** ***/
-        List<TEntity> md = getDao().find(new StringBuilder("SELECT COUNT(*) ").append(query));
+        List<TEntity> md = (List<TEntity>) getDao().find(new StringBuilder("SELECT COUNT(*) ").append(query));
         tPagin(TypeCast.toInt(md.get(0)), 0);
         query.insert(0, projection);
         query.insert(0, "SELECT row_.*,rownum rownum_ FROM (");
