@@ -91,6 +91,8 @@ public interface CliserDao {
      * 
      */
     public List<?> find(final StringBuilder sql);
+    
+    public List<?> find(final StringBuilder sql, final Object[] params);
 
     /**
      *

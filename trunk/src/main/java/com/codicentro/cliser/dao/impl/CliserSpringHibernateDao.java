@@ -111,16 +111,18 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
-        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
+    public List<?> find(final StringBuilder sql) {
+        return find(null, sql.toString(), null);
+    }
 
-            @Override
-            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery query = session.createSQLQuery(sql);
-                query.addEntity(eClazz);
-                return query.list();
-            }
-        });
+    @Override
+    public List<?> find(final StringBuilder sql, final Object[] params) {
+        return find(null, sql.toString(), params);
+    }
+
+    @Override
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
+        return find(eClazz, sql, null);
     }
 
     @Override
@@ -130,9 +132,13 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
             @Override
             public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
                 SQLQuery query = session.createSQLQuery(sql);
-                query.addEntity(eClazz);
-                for (int idx = 0; idx < params.length; idx++) {
-                    query.setParameter(idx, params[idx]);
+                if (eClazz != null) {
+                    query.addEntity(eClazz);
+                }
+                if (params != null && params.length > 0) {
+                    for (int idx = 0; idx < params.length; idx++) {
+                        query.setParameter(idx, params[idx]);
+                    }
                 }
                 return query.list();
             }
@@ -154,15 +160,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         });
     }
 
-    @Override
-    public Session getHBSession() {
-        return getSession();
-    }
-
-//    @Override
-//    public int execute(StringBuilder sql) {
-//        return getHibernateTemplate().bulkUpdate(sql.toString());
-//    }
     @Override
     public int execute(StringBuilder sql) {
         Session session = getSessionFactory().openSession();
@@ -188,14 +185,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
-    public List<?> find(final StringBuilder sql) {
-        return getHibernateTemplate().executeFind(new HibernateCallback<List<?>>() {
-
-            @Override
-            public List<?> doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery query = session.createSQLQuery(sql.toString());
-                return query.list();
-            }
-        });
+    public Session getHBSession() {
+        return getSession();
     }
 }
