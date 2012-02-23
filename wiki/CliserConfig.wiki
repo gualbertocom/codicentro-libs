@@ -117,7 +117,7 @@ public class StateBL extends BL {
     <!--- CATALOGUES -->
     <business-logic package="com.codicentro.example.catalogues">
         <bl>State</bl>
-        <bl>City</bl>
+        <bl publicAccess="true">City</bl>
         <bl package="com.codicentro.example.catalogues.others">Year</bl>
     </business-logic>   
 </cliser-config>
