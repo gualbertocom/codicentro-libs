@@ -1,17 +1,12 @@
 /**
- * Author: Alexander Villalobos Yadró
- * E-Mail: avyadro@yahoo.com.mx
- * Created on Apr 20, 2009, 05:37:24 PM
- * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
- * Class Name: CliserServlet.java
- * Purpose:
- * Revisions:
- * Ver        Date               Author                                      Description
- * ---------  ---------------  -----------------------------------  ------------------------------------
- * 1.0.0       Apr 20, 2009           Alexander Villalobos Yadró      New class.
- **/
+ * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
+ * Apr 20, 2009, 05:37:24 PM Place: Monterrey, Nuevo León, México. Company:
+ * Codicentro Web: http://www.codicentro.com Class Name: CliserServlet.java
+ * Purpose: Revisions: Ver Date Author Description --------- ---------------
+ * ----------------------------------- ------------------------------------
+ * 1.0.0 Apr 20, 2009 Alexander Villalobos Yadró New class.
+ *
+ */
 package com.codicentro.cliser;
 
 import com.codicentro.core.CDCException;
@@ -55,7 +50,7 @@ public class CliserServlet extends HttpServlet {
     private String IU = "getIU";
 
     /**
-     * 
+     *
      * @throws ServletException
      */
     @Override
@@ -69,30 +64,44 @@ public class CliserServlet extends HttpServlet {
             Document doc = builder.build(new File(getServletContext().getRealPath("") + cliserConfig));
             fConfig = doc.getRootElement();
             Element eI = fConfig.getChild("cliser-init");
-            /*** CONTROLLER PARAM NAME ***/
+            /**
+             * * CONTROLLER PARAM NAME **
+             */
             Element e = eI.getChild("controller-param-name");
             controllerParamName = TypeCast.toString(((e != null) ? e.getValue() : ""));
             log.info("Controller param name is -> " + controllerParamName);
-            /*** SESSION NAME ***/
+            /**
+             * * SESSION NAME **
+             */
             e = eI.getChild("session-name");
             sessionName = TypeCast.toString(((e != null) ? e.getValue() : ""));
             log.info("Sessiomn name is -> " + sessionName);
-            /*** IU NAME ***/
+            /**
+             * * IU NAME **
+             */
             e = eI.getChild("iu");
             IU = TypeCast.toString(((e != null) ? e.getValue() : ""));
             log.info("IU Identifier is -> " + IU);
-            /*** DATA BASE PROTOCOL ***/
+            /**
+             * * DATA BASE PROTOCOL **
+             */
             e = eI.getChild("db-protocol");
             dbProtocol = DBProtocolType.valueOf(TypeCast.toString(((e != null) ? e.getValue() : "")));
             log.info("Data base protocol is -> " + dbProtocol);
-            /*** DATA BASE VERSION ***/
+            /**
+             * * DATA BASE VERSION **
+             */
             dbVersion = e.getAttribute("version").getValue();
             log.info("Data base version is -> " + dbVersion);
-            /*** DEFAULT DATE FORMAT ***/
+            /**
+             * * DEFAULT DATE FORMAT **
+             */
             e = eI.getChild("date-format");
             dateFormat = (e == null) ? "dd/mm/yyyy" : e.getValue();
             log.info("Date format -> " + dateFormat);
-            /*** WEB APPLICATION CONTEXT ***/
+            /**
+             * * WEB APPLICATION CONTEXT **
+             */
             wac = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
             if (wac == null) {
                 log.warn("Web application context Spring is not initialize.");
@@ -111,29 +120,19 @@ public class CliserServlet extends HttpServlet {
             errBuf.append("******************\n");
             mBLs = new HashMap<String, BLClass>();
             Iterator iRootBLs = fConfig.getChildren("business-logic").iterator();
-            String name = null;
-            String schema = null;
-            String rootPackage = null;
-            String blPackage = null;
-            boolean publicAccess = false;
-            String idBL = null;
-            BLClass blClass = null;
-            Element eRootBL = null;
-            Element eBL = null;
-            Iterator iBLs = null;
             while (iRootBLs.hasNext()) {
-                eRootBL = (Element) iRootBLs.next();
-                rootPackage = ((eRootBL.getAttribute("package") != null) ? eRootBL.getAttribute("package").getValue() : null);
-                iBLs = eRootBL.getChildren().iterator();
+                Element eRootBL = (Element) iRootBLs.next();
+                String rootPackage = ((eRootBL.getAttribute("package") != null) ? eRootBL.getAttribute("package").getValue() : null);
+                Iterator iBLs = eRootBL.getChildren().iterator();
                 errBuf.append("Root package: ").append(rootPackage).append("\n");
                 while (iBLs.hasNext()) {
-                    eBL = (Element) iBLs.next();
-                    blPackage = ((eBL.getAttribute("package") != null) ? eBL.getAttribute("package").getValue() : null);
-                    schema = ((eBL.getAttribute("schema") != null) ? eBL.getAttribute("schema").getValue() : null);
-                    publicAccess = ((eBL.getAttribute("publicAccess") != null) ? TypeCast.toBoolean(eBL.getAttribute("publicAccess").getValue()) : false);
-                    name = ((eBL.getValue() != null) ? eBL.getValue() : "");
-                    idBL = ((schema != null) ? schema : "") + name;
-                    blClass = new BLClass(((blPackage != null) ? blPackage + "." : ((rootPackage != null) ? rootPackage + "." : "")) + idBL + "BL");
+                    Element eBL = (Element) iBLs.next();
+                    String blPackage = ((eBL.getAttribute("package") != null) ? eBL.getAttribute("package").getValue() : null);
+                    String schema = ((eBL.getAttribute("schema") != null) ? eBL.getAttribute("schema").getValue() : null);
+                    boolean publicAccess = ((eBL.getAttribute("publicAccess") != null) ? TypeCast.toBoolean(eBL.getAttribute("publicAccess").getValue()) : false);
+                    String name = ((eBL.getValue() != null) ? eBL.getValue() : "");
+                    String idBL = ((schema != null) ? schema : "") + name;
+                    BLClass blClass = new BLClass(((blPackage != null) ? blPackage + "." : ((rootPackage != null) ? rootPackage + "." : "")) + idBL + "BL");
                     errBuf.append("ID: ").append(idBL);
                     errBuf.append((blPackage != null) ? ", Package: " + blPackage : "");
                     errBuf.append(", Name: ").append(blClass).append("\n");
@@ -153,7 +152,7 @@ public class CliserServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -165,7 +164,7 @@ public class CliserServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -177,7 +176,7 @@ public class CliserServlet extends HttpServlet {
     }
 
     /**
-     * 
+     *
      * @param request
      * @param response
      * @throws IOException
