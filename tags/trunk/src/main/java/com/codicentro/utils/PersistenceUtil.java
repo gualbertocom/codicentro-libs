@@ -1,0 +1,31 @@
+/**
+ * @author: Alexander Villalobos Yadró @user: avillalobos @email:
+ * avyadro@yahoo.com.mx @created: Jan 25, 2012 at 1:06:21 PM @place: Toluca,
+ * Estado de México, México @company: AdeA México S.A. de C.V. @web:
+ * http://www.adea.com.mx @className: PersistenceUtil.java @purpose: Revisions:
+ * Ver Date Author Description --------- ---------------
+ * ----------------------------------- ------------------------------------
+ *
+ */
+package com.codicentro.utils;
+
+public class PersistenceUtil {
+
+    /**
+     * javax.persistence.Column
+     * @param clazz
+     * @param name
+     * @return 
+     */
+    public static String findColumnNameByFieldName(final Class<?> clazz, final String name) {
+        String columnName = null;
+        Integer idxField = 0;
+        while (columnName == null && idxField < clazz.getDeclaredFields().length) {
+            if (clazz.getDeclaredFields()[idxField].getName().equals(name)) {
+                columnName = clazz.getDeclaredFields()[idxField].getAnnotation(javax.persistence.Column.class).name();
+            }
+            idxField++;
+        }
+        return columnName;
+    }
+}
