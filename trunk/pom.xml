@@ -5,7 +5,7 @@
     <groupId>com.codicentro</groupId>
     <artifactId>codicentro-libs</artifactId>
     <packaging>jar</packaging>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <name>codicentro-libs</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>com.codicentro</groupId>
             <artifactId>codicentro-core</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
