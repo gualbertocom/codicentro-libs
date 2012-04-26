@@ -103,6 +103,11 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit) {
         return getHibernateTemplate().findByExample(entity, start, limit);
     }
+    
+    @Override
+    public <TEntity> List<TEntity> find(final TEntity entity) {
+        return getHibernateTemplate().findByExample(entity);
+    }
 
     @Transactional(readOnly = true)
     @Override
