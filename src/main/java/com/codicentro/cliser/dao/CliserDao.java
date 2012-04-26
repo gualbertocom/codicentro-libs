@@ -135,6 +135,8 @@ public interface CliserDao {
      * @return
      */
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
+    
+    public <TEntity> List<TEntity> find(final TEntity entity);
 
     /**
      *
