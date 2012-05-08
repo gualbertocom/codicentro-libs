@@ -69,6 +69,8 @@ public interface CliserDao {
      * @return
      */
     public <TEntity> TEntity get(final Class<TEntity> entityClass, final Serializable id);
+    
+    public Object get(final StringBuilder sql);
 
     /**
      *
