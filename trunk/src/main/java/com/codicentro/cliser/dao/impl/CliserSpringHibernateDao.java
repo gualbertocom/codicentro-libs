@@ -85,20 +85,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         return getHibernateTemplate().get(entityClass, id);
     }
 
-    @Override
-    public Object get(final StringBuilder sql) {
-        return getHibernateTemplate().executeWithNativeSession(new HibernateCallback<Object>() {
-
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {                
-                SQLQuery query = session.createSQLQuery(sql.toString());                
-                return query.uniqueResult();
-            }
-        });
-    }
-    
-    
-
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql) {
