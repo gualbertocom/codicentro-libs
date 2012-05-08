@@ -85,26 +85,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         return getHibernateTemplate().get(entityClass, id);
     }
 
-    @Override
-    public <O> O get(final Class<O> eClazz, final StringBuilder sql) {
-        List<?> rs = find(sql);
-        if (rs == null || rs.isEmpty()) {
-            return null;
-        } else {
-            return eClazz.cast(rs.get(0));
-        }
-    }
-    
-    @Override
-    public <O> O get(final Class<O> eClazz, final StringBuilder sql, final Object... params) {
-        List<?> rs = find(sql, params);
-        if (rs == null || rs.isEmpty()) {
-            return null;
-        } else {
-            return eClazz.cast(rs.get(0));
-        }
-    }
-
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql) {
