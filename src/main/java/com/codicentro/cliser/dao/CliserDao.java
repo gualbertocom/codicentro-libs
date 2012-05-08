@@ -72,6 +72,25 @@ public interface CliserDao {
 
     /**
      *
+     * @param <O>
+     * @param eClazz
+     * @param sql
+     * @return
+     */
+    public <O> O get(final Class<O> eClazz, final StringBuilder sql);
+
+    /**
+     *
+     * @param <O>
+     * @param eClazz
+     * @param sql
+     * @param params
+     * @return
+     */
+    public <O> O get(final Class<O> eClazz, final StringBuilder sql, final Object... params);
+
+    /**
+     *
      * @param <TEntity>
      * @param hql
      * @return
@@ -88,10 +107,18 @@ public interface CliserDao {
     public <TEntity> List<TEntity> find(final String hql, final Object... values);
 
     /**
-     * 
+     *
+     * @param sql
+     * @return
      */
     public List<?> find(final StringBuilder sql);
-    
+
+    /**
+     *
+     * @param sql
+     * @param params
+     * @return
+     */
     public List<?> find(final StringBuilder sql, final Object[] params);
 
     /**
@@ -135,7 +162,7 @@ public interface CliserDao {
      * @return
      */
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit);
-    
+
     public <TEntity> List<TEntity> find(final TEntity entity);
 
     /**
@@ -149,7 +176,7 @@ public interface CliserDao {
 
     /**
      *
-     * @return
+     * @return @deprecated
      */
     public org.hibernate.Session getHBSession();
 

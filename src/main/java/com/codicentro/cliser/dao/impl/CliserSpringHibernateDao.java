@@ -1,12 +1,16 @@
-/**
- * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
- * 03/08/2010, 10:52:52 AM Place: Toluca, Estado de Mexico, Mexico. Company:
- * Codicentro Web: http://www.codicentro.com Class Name:
- * CliserSpringHibernateDao.java Purpose: Revisions: Ver Date Author Description
- * --------- --------------- -----------------------------------
- * ------------------------------------
- *
- */
+/*
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on 03/08/2010, 10:52:52 AM
+ * Place: Toluca, Estado de Mexico, Mexico.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: CliserSpringHibernateDao.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ **/
 package com.codicentro.cliser.dao.impl;
 
 import com.codicentro.cliser.dao.CliserDao;
@@ -81,6 +85,26 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         return getHibernateTemplate().get(entityClass, id);
     }
 
+    @Override
+    public <O> O get(final Class<O> eClazz, final StringBuilder sql) {
+        List<?> rs = find(sql);
+        if (rs == null || rs.isEmpty()) {
+            return null;
+        } else {
+            return eClazz.cast(rs.get(0));
+        }
+    }
+    
+    @Override
+    public <O> O get(final Class<O> eClazz, final StringBuilder sql, final Object... params) {
+        List<?> rs = find(sql, params);
+        if (rs == null || rs.isEmpty()) {
+            return null;
+        } else {
+            return eClazz.cast(rs.get(0));
+        }
+    }
+
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql) {
@@ -103,7 +127,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public <TEntity> List<TEntity> find(final TEntity entity, final Integer start, final Integer limit) {
         return getHibernateTemplate().findByExample(entity, start, limit);
     }
-    
+
     @Override
     public <TEntity> List<TEntity> find(final TEntity entity) {
         return getHibernateTemplate().findByExample(entity);
@@ -189,6 +213,11 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         return getHibernateTemplate().bulkUpdate(sql.toString(), values);
     }
 
+    /**
+     *
+     * @return @deprecated Este método se debe de utilizar con mucho cuidado por
+     * el tema de las conexiones.
+     */
     @Override
     public Session getHBSession() {
         return getSession();
