@@ -72,25 +72,6 @@ public interface CliserDao {
 
     /**
      *
-     * @param <O>
-     * @param eClazz
-     * @param sql
-     * @return
-     */
-    public <O> O get(final Class<O> eClazz, final StringBuilder sql);
-
-    /**
-     *
-     * @param <O>
-     * @param eClazz
-     * @param sql
-     * @param params
-     * @return
-     */
-    public <O> O get(final Class<O> eClazz, final StringBuilder sql, final Object... params);
-
-    /**
-     *
      * @param <TEntity>
      * @param hql
      * @return
