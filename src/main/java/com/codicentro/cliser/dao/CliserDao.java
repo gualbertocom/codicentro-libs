@@ -1,11 +1,16 @@
-/**
- * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
- * 03/08/2010, 10:52:52 AM Place: Toluca, Estado de Mexico, Mexico. Company:
- * Codicentro Web: http://www.codicentro.com Class Name: CliserDao.java Purpose:
- * Revisions: Ver Date Author Description --------- ---------------
- * ----------------------------------- ------------------------------------
- *
- */
+/*
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on 03/08/2010, 10:52:52 AM
+ * Place: Toluca, Estado de Mexico, Mexico.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: CliserDao.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ **/
 package com.codicentro.cliser.dao;
 
 import java.io.Serializable;
@@ -69,8 +74,6 @@ public interface CliserDao {
      * @return
      */
     public <TEntity> TEntity get(final Class<TEntity> entityClass, final Serializable id);
-    
-    public Object get(final StringBuilder sql);
 
     /**
      *
