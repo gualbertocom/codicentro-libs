@@ -14,6 +14,7 @@
 package com.codicentro.cliser.dao.impl;
 
 import com.codicentro.cliser.dao.CliserDao;
+import com.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
@@ -125,6 +126,11 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
+    public List<?> find(final StringBuilder sql, final Scalar[] scalars) {
+        return find(null, sql.toString(), null, scalars);
+    }
+
+    @Override
     public List<?> find(final StringBuilder sql, final Object[] params) {
         return find(null, sql.toString(), params);
     }
@@ -136,6 +142,11 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params) {
+        return find(eClazz, sql, params, null);
+    }
+
+    @Override
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars) {
         return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
 
             @Override
@@ -147,6 +158,15 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
                 if (params != null && params.length > 0) {
                     for (int idx = 0; idx < params.length; idx++) {
                         query.setParameter(idx, params[idx]);
+                    }
+                }
+                if (scalars != null) {
+                    for (Scalar scalar : scalars) {
+                        if (scalar.getType() != null) {
+                            query.addScalar(scalar.getAlias(), scalar.getType());
+                        } else {
+                            query.addScalar(scalar.getAlias());
+                        }
                     }
                 }
                 return query.list();
