@@ -13,6 +13,7 @@
  **/
 package com.codicentro.cliser.dao;
 
+import com.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,8 @@ public interface CliserDao {
      */
     public List<?> find(final StringBuilder sql);
 
+    public List<?> find(final StringBuilder sql, final Scalar[] scalars);
+
     /**
      *
      * @param sql
@@ -120,6 +123,18 @@ public interface CliserDao {
      *
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
+
+    /**
+     *
+     * @param <TEntity>
+     * @param eClazz
+     * @param sql
+     * @param params
+     * @param scalars, Declare list a scalar query result. Hibernate will
+     * attempt to automatically detect the underlying type.
+     * @return
+     */
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars);
 
     /**
      *
