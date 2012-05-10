@@ -134,7 +134,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public List<?> find(final StringBuilder sql, final Object[] params) {
         return find(null, sql.toString(), params, null);
     }
-    
+
     @Override
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return find(null, sql.toString(), params, scalars);
@@ -195,27 +195,47 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
-    public int execute(StringBuilder sql) {
-        Session session = getSessionFactory().openSession();
-        try {
-            SQLQuery query = session.createSQLQuery(sql.toString());
-            int rs = query.executeUpdate();
-            return rs;
-        } catch (Exception ex) {
-            return -1;
-        } finally {
-            session.close();
-        }
+    public int execute(String hql) {
+        return getHibernateTemplate().bulkUpdate(hql);
     }
 
     @Override
-    public int execute(StringBuilder sql, Object value) {
-        return getHibernateTemplate().bulkUpdate(sql.toString(), value);
+    public int execute(String hql, Object value) {
+        return getHibernateTemplate().bulkUpdate(hql, value);
     }
 
     @Override
-    public int execute(StringBuilder sql, Object... values) {
-        return getHibernateTemplate().bulkUpdate(sql.toString(), values);
+    public int execute(String hql, Object... values) {
+        return getHibernateTemplate().bulkUpdate(hql, values);
+    }
+
+    @Override
+    public int execute(final StringBuilder sql) {
+        return execute(sql, new Object[]{});
+    }
+
+    @Override
+    public int execute(final StringBuilder sql, final Object param) {
+        return execute(sql, new Object[]{param});
+    }
+
+    @Override
+    public int execute(final StringBuilder sql, final Object... params) {
+
+        return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
+
+            @Override
+            public Integer doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery query = session.createSQLQuery(sql.toString());
+                if (params != null && params.length > 0) {
+                    for (int idx = 0; idx < params.length; idx++) {
+                        query.setParameter(idx, params[idx]);
+                    }
+                }
+                return query.executeUpdate();
+            }
+        });
+
     }
 
     /**

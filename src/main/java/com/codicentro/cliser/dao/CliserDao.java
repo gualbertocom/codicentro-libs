@@ -185,10 +185,47 @@ public interface CliserDao {
 
     /**
      *
+     * @param hql
+     * @return
+     */
+    public int execute(final String hql);
+
+    /**
+     *
+     * @param hql
+     * @param value
+     * @return
+     */
+    public int execute(final String hql, final Object value);
+
+    /**
+     *
+     * @param hql
+     * @param values
+     * @return
+     */
+    public int execute(final String hql, final Object... values);
+
+    /**
+     *
+     * @param sql
+     * @return
      */
     public int execute(final StringBuilder sql);
 
-    public int execute(final StringBuilder sql, Object value);
+    /**
+     *
+     * @param sql
+     * @param param
+     * @return
+     */
+    public int execute(final StringBuilder sql, final Object param);
 
-    public int execute(final StringBuilder sql, Object... values);
+    /**
+     *
+     * @param sql
+     * @param params
+     * @return
+     */
+    public int execute(final StringBuilder sql, final Object... params);
 }
