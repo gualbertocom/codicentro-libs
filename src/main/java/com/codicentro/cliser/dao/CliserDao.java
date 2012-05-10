@@ -110,6 +110,8 @@ public interface CliserDao {
      */
     public List<?> find(final StringBuilder sql, final Object[] params);
 
+    public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars);
+
     /**
      *
      * @param <TEntity>
