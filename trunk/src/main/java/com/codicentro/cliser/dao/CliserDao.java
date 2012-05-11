@@ -112,19 +112,31 @@ public interface CliserDao {
 
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars);
 
+  
     /**
-     *
+     * 
      * @param <TEntity>
      * @param eClazz
      * @param sql
-     * @return
+     * @return 
+     * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
+    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql);
 
     /**
-     *
+     * 
+     * @param <TEntity>
+     * @param eClazz
+     * @param sql
+     * @param params
+     * @return 
+     * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
+    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object...params);
 
     /**
      *
@@ -135,9 +147,12 @@ public interface CliserDao {
      * @param scalars, Declare list a scalar query result. Hibernate will
      * attempt to automatically detect the underlying type.
      * @return
+     * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars);
-
+    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars);
+    
     /**
      *
      * @param <TEntity>
