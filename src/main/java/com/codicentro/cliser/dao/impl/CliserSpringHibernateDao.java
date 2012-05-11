@@ -138,25 +138,43 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return find(null, sql.toString(), params, scalars);
-    }
+    }    
 
     @Override
+    @Deprecated
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
+        return find(eClazz, sql, null);
+    }
+    
+    @Override    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql) {
         return find(eClazz, sql, null);
     }
 
     @Override
+    @Deprecated
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params) {
+        return find(eClazz, sql, params, null);
+    }
+    
+    @Override    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params) {
         return find(eClazz, sql, params, null);
     }
 
     @Override
+    @Deprecated
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars) {
+       return find(eClazz, new StringBuilder(sql), params, scalars);
+    }
+    
+    @Override    
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
 
             @Override
             public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery query = session.createSQLQuery(sql);
+                SQLQuery query = session.createSQLQuery(sql.toString());
                 if (eClazz != null) {
                     query.addEntity(eClazz);
                 }
