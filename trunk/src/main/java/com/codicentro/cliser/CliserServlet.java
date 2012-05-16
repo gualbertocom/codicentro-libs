@@ -1,12 +1,17 @@
-/**
- * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
- * Apr 20, 2009, 05:37:24 PM Place: Monterrey, Nuevo León, México. Company:
- * Codicentro Web: http://www.codicentro.com Class Name: CliserServlet.java
- * Purpose: Revisions: Ver Date Author Description --------- ---------------
- * ----------------------------------- ------------------------------------
- * 1.0.0 Apr 20, 2009 Alexander Villalobos Yadró New class.
- *
- */
+/*
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on Apr 20, 2009, 05:37:24 PM
+ * Place: Monterrey, Nuevo León, México.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: CliserServlet.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ * 1.0.0       Apr 20, 2009           Alexander Villalobos Yadró      New class.
+ **/
 package com.codicentro.cliser;
 
 import com.codicentro.core.CDCException;

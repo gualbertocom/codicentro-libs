@@ -1,31 +1,29 @@
-/**
- * Author: Alexander Villalobos Yadró E-Mail: avyadro@yahoo.com.mx Created on
- * Oct 01, 2008, 10:27:26 AM Place: Querétaro, Querétaro, México. Company:
- * Codicentro Web: http://www.codicentro.com Class Name: ResponseWrapper.java
- * Purpose: Revisions: Ver Date Author Description --------- ---------------
- * ----------------------------------- ------------------------------------
- * 1.0.0 Oct 01, 2008 Alexander Villalobos Yadró New class.
- *
- */
+/*
+ * Author: Alexander Villalobos Yadró
+ * E-Mail: avyadro@yahoo.com.mx
+ * Created on Oct 01, 2008, 10:27:26 AM
+ * Place: Querétaro, Querétaro, México.
+ * Company: Codicentro
+ * Web: http://www.codicentro.com
+ * Class Name: ResponseWrapper.java
+ * Purpose:
+ * Revisions:
+ * Ver        Date               Author                                      Description
+ * ---------  ---------------  -----------------------------------  ------------------------------------
+ * 1.0.0       Oct 01, 2008           Alexander Villalobos Yadró      New class.
+ **/
 package com.codicentro.cliser;
 
 import com.codicentro.core.CDCException;
 import com.codicentro.core.TypeCast;
 import com.codicentro.core.model.Table;
+import flexjson.JSONSerializer;
+import flexjson.transformer.DateTransformer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.util.Iterator;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
-import flexjson.JSONSerializer;
-import flexjson.transformer.DateTransformer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
