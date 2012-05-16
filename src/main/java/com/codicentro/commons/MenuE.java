@@ -1,4 +1,4 @@
-/**
+/*
  * Author: Alexander Villalobos Yadró
  * E-Mail: avyadro@yahoo.com.mx
  * Created on 4/06/2009, 03:31:21 PM
