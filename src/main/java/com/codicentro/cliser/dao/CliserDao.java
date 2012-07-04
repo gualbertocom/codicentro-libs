@@ -15,6 +15,7 @@ package com.codicentro.cliser.dao;
 
 import com.codicentro.utils.Scalar;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
@@ -47,8 +48,11 @@ public interface CliserDao {
     /**
      *
      * @param entities
+     * @deprecated - Used collections
      */
     public <TEntity> void persist(TEntity[] entities);
+
+    public <TEntity> void persist(Collection<TEntity> entities);
 
     /**
      *
@@ -112,31 +116,30 @@ public interface CliserDao {
 
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars);
 
-  
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazz
      * @param sql
-     * @return 
+     * @return
      * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql);
-    
+
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql);
 
     /**
-     * 
+     *
      * @param <TEntity>
      * @param eClazz
      * @param sql
      * @param params
-     * @return 
+     * @return
      * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params);
-    
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object...params);
+
+    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object... params);
 
     /**
      *
@@ -150,9 +153,9 @@ public interface CliserDao {
      * @deprecated Use el método con parámetro sql de tipo StringBuilder
      */
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars);
-    
+
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars);
-    
+
     /**
      *
      * @param <TEntity>

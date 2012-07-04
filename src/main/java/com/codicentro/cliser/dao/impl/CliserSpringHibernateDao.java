@@ -17,6 +17,7 @@ import com.codicentro.cliser.dao.CliserDao;
 import com.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.HibernateException;
@@ -66,6 +67,12 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
         } catch (Exception ex) {
             throw new RuntimeException(entity.toString(), ex);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public <TEntity> void persist(Collection<TEntity> entities) {
+        getHibernateTemplate().saveOrUpdateAll(entities);
     }
 
     @Transactional(readOnly = true)
@@ -138,15 +145,15 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return find(null, sql.toString(), params, scalars);
-    }    
+    }
 
     @Override
     @Deprecated
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
         return find(eClazz, sql, null);
     }
-    
-    @Override    
+
+    @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql) {
         return find(eClazz, sql, null);
     }
@@ -156,8 +163,8 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params) {
         return find(eClazz, sql, params, null);
     }
-    
-    @Override    
+
+    @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params) {
         return find(eClazz, sql, params, null);
     }
@@ -165,10 +172,10 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     @Deprecated
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars) {
-       return find(eClazz, new StringBuilder(sql), params, scalars);
+        return find(eClazz, new StringBuilder(sql), params, scalars);
     }
-    
-    @Override    
+
+    @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
 
