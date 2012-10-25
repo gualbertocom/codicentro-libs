@@ -346,7 +346,7 @@ public class ResponseWrapper implements Serializable {
             json.append(",\"message\":[").append(((message == null) ? "" : message.toString())).append("]");
             for (Iterator<String> i = data.iterator(); i.hasNext();) {
                 String tmpData = i.next();
-                if (!TypeCast.isNullOrEmpty(tmpData)) {
+                if (!TypeCast.isBlank(tmpData)) {
                     json.append(",").append(tmpData);
                 }
             }
@@ -417,7 +417,7 @@ public class ResponseWrapper implements Serializable {
      * @return
      */
     public static String charSpecial(String r) {
-        if (TypeCast.isNullOrEmpty(r)) {
+        if (TypeCast.isBlank(r)) {
             return null;
         }
         r = r.replaceAll("\n", "\\\\n");
