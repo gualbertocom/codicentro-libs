@@ -66,8 +66,7 @@
         <dependency>
             <groupId>com.codicentro</groupId>
             <artifactId>codicentro-core</artifactId>
-            <version>1.2-SNAPSHOT</version>
-            <type>jar</type>
+            <version>1.2-SNAPSHOT</version>        
         </dependency>
         <dependency>
             <groupId>javax</groupId>
