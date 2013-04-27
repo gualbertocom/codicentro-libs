@@ -197,12 +197,6 @@ public interface CliserDao {
 
     /**
      *
-     * @return @deprecated
-     */
-    public org.hibernate.Session getHBSession();
-
-    /**
-     *
      * @param hql
      * @return
      */

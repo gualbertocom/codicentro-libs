@@ -178,7 +178,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
-
             @Override
             public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
                 SQLQuery query = session.createSQLQuery(sql.toString());
@@ -207,7 +206,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     @Override
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values) {
         return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
-
             @Override
             public List<TEntity> doInHibernate(final Session session) throws HibernateException, SQLException {
                 Query query = session.getNamedQuery(queryName);
@@ -248,7 +246,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     public int execute(final StringBuilder sql, final Object... params) {
 
         return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-
             @Override
             public Integer doInHibernate(Session session) throws HibernateException, SQLException {
                 SQLQuery query = session.createSQLQuery(sql.toString());
@@ -261,15 +258,5 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
             }
         });
 
-    }
-
-    /**
-     *
-     * @return @deprecated Este método se debe de utilizar con mucho cuidado por
-     * el tema de las conexiones.
-     */
-    @Override
-    public Session getHBSession() {
-        return getSession();
     }
 }
