@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,6 +43,9 @@ public class ServletUtil {
         response.setContentType((mimetype != null) ? mimetype : "application/octet-stream");
         response.setContentLength((int) f.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + originalFilename + "\"");
+        Cookie ck = new Cookie("fileDownloadStatus", "complete");
+        ck.setPath("/");
+        response.addCookie(ck);
         byte[] bbuf = new byte[1024];
         DataInputStream in = new DataInputStream(new FileInputStream(f));//
         while ((in != null) && ((length = in.read(bbuf)) != -1)) {
