@@ -396,19 +396,19 @@ public class ResponseWrapper implements Serializable {
 
     public static String success(String data, int total) {
         StringBuilder sb = new StringBuilder("{");
-        sb.append("data:").append(data);
+        sb.append("data:").append(charSpecial(data));
         sb.append(",success:").append(true);
         sb.append(",rowCount:").append(total);
         sb.append("}");
-        return charSpecial(sb.toString());
+        return sb.toString();
     }
 
     public static String failed(String message) {
         StringBuilder sb = new StringBuilder("{");
-        sb.append("message:\"").append(message).append("\"");
+        sb.append("message:\"").append(charSpecial(message)).append("\"");
         sb.append(",success:").append(false);
         sb.append("}");
-        return charSpecial(sb.toString());
+        return sb.toString();
     }
 
     /**
@@ -420,6 +420,7 @@ public class ResponseWrapper implements Serializable {
         if (TypeCast.isBlank(r)) {
             return null;
         }
+        r = r.replaceAll("\"", "\\\\\"");
         r = r.replaceAll("\n", "\\\\n");
         r = r.replaceAll("\r\n", "\\\\n");
 
