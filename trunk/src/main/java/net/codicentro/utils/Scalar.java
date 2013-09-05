@@ -4,15 +4,15 @@
  * @email: avyadro@yahoo.com.mx
  * @created: May 9, 2012 at 12:43:37 PM
  * @place: Toluca, Estado de México, México
- * @company: AdeA México S.A. de C.V.
- * @web: http://www.adea.com.mx
+ * @company: Codicentro©
+ * @web: http://www.codicentro.net
  * @className: Scalar.java
  * @purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.utils;
+package net.codicentro.utils;
 
 import org.hibernate.type.Type;
 

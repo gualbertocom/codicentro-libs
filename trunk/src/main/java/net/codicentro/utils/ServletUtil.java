@@ -4,17 +4,17 @@
  * @email: avyadro@yahoo.com.mx
  * @created: Sep 28, 2012 at 11:56:38 AM
  * @place: Toluca, Estado de México, México
- * @company: AdeA México S.A. de C.V.
- * @web: http://www.adea.com.mx
+ * @company: Codicentro©
+ * @web: http://www.codicentro.net
  * @className: ServletUtil.java
  * @purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.utils;
+package net.codicentro.utils;
 
-import com.codicentro.core.CDCException;
+import net.codicentro.core.CDCException;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;

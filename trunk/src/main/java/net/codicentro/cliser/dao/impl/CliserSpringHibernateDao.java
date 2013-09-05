@@ -3,18 +3,18 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on 03/08/2010, 10:52:52 AM
  * Place: Toluca, Estado de Mexico, Mexico.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: CliserSpringHibernateDao.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.cliser.dao.impl;
+package net.codicentro.cliser.dao.impl;
 
-import com.codicentro.cliser.dao.CliserDao;
-import com.codicentro.utils.Scalar;
+import net.codicentro.cliser.dao.CliserDao;
+import net.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;

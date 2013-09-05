@@ -3,8 +3,8 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on 3/06/2009, 02:42:14 PM
  * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: Menu.java
  * Purpose:
  * Revisions:
@@ -12,11 +12,11 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0      3/06/2009           Alexander Villalobos Yadró           New class.
  **/
-package com.codicentro.commons;
+package net.codicentro.commons;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.model.Table;
+import net.codicentro.core.CDCException;
+import net.codicentro.core.TypeCast;
+import net.codicentro.core.model.Table;
 import java.io.Serializable;
 
 public class Menu implements Serializable {

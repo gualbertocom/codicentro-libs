@@ -3,17 +3,17 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on 03/08/2010, 10:52:52 AM
  * Place: Toluca, Estado de Mexico, Mexico.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: CliserDao.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.cliser.dao;
+package net.codicentro.cliser.dao;
 
-import com.codicentro.utils.Scalar;
+import net.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;

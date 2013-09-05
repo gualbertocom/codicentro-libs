@@ -4,15 +4,15 @@
  * @email: avyadro@yahoo.com.mx
  * @created: 25/01/2011 at 05:57:33 PM
  * @place: Toluca, Estado de México, México
- * @company: AdeA México S.A. de C.V.
- * @web: http://www.adea.com.mx
+ * @company: Codicentro©
+ * @web: http://www.codicentro.net
  * @className: BLClass.java
  * @purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.cliser;
+package net.codicentro.cliser;
 
 public class BLClass {
 
