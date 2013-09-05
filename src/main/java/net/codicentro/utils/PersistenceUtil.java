@@ -4,8 +4,8 @@
  * @email: avyadro@yahoo.com.mx
  * @created: Jan 25, 2012 at 1:06:21 PM
  * @place: Toluca, Estado de México, México
- * @company: AdeA México S.A. de C.V.
- * @web: http://www.adea.com.mx
+ * @company: Codicentro©
+ * @web: http://www.codicentro.net
  * @className: PersistenceUtil.java
  * @purpose:
  * Revisions:
@@ -13,7 +13,7 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0       May 08, 2009           Alexander Villalobos Yadró      New class.
  **/
-package com.codicentro.utils;
+package net.codicentro.utils;
 
 public class PersistenceUtil {
 

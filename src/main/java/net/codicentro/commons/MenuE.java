@@ -3,8 +3,8 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on 4/06/2009, 03:31:21 PM
  * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: MenuE.java
  * Purpose:
  * Revisions:
@@ -12,7 +12,7 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0      4/06/2009           Alexander Villalobos Yadró           New class.
  **/
-package com.codicentro.commons;
+package net.codicentro.commons;
 
 public class MenuE {
 

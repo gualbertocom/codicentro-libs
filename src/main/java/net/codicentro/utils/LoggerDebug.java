@@ -3,8 +3,8 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on May 08, 2009, 10:27:26 AM
  * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: LoggerDebug.java
  * Purpose:
  * Revisions:
@@ -12,11 +12,11 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0       May 08, 2009           Alexander Villalobos Yadró      New class.
  **/
-package com.codicentro.utils;
+package net.codicentro.utils;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.Types.LoggerOutType;
-import com.codicentro.core.model.ParamsDB;
+import net.codicentro.core.CDCException;
+import net.codicentro.core.Types.LoggerOutType;
+import net.codicentro.core.model.ParamsDB;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -36,7 +36,7 @@ public class LoggerDebug {
     private StringBuffer longMessage = null;
 
     /**
-     * 
+     *
      * @param name
      * @param path
      * @param fileName

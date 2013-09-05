@@ -3,8 +3,8 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on Apr 20, 2009, 05:37:24 PM
  * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: RequestWrapper.java
  * Purpose:
  * Revisions:
@@ -12,10 +12,10 @@
  * ---------  ---------------  -----------------------------------  ------------------------------------
  * 1.0.0       Apr 20, 2009           Alexander Villalobos Yadró      New class.
  **/
-package com.codicentro.cliser;
+package net.codicentro.cliser;
 
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
+import net.codicentro.core.CDCException;
+import net.codicentro.core.TypeCast;
 import java.io.*;
 import java.util.*;
 import javax.servlet.ServletInputStream;

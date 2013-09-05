@@ -3,20 +3,20 @@
  * E-Mail: avyadro@yahoo.com.mx
  * Created on Apr 20, 2009, 05:37:24 PM
  * Place: Monterrey, Nuevo León, México.
- * Company: Codicentro
- * Web: http://www.codicentro.com
+ * Company: Codicentro©
+ * Web: http://www.codicentro.net
  * Class Name: BL.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
  * ---------  ---------------  -----------------------------------  ------------------------------------
  **/
-package com.codicentro.cliser;
+package net.codicentro.cliser;
 
-import com.codicentro.cliser.dao.CliserDao;
-import com.codicentro.core.CDCException;
-import com.codicentro.core.TypeCast;
-import com.codicentro.core.Types.DBProtocolType;
+import net.codicentro.cliser.dao.CliserDao;
+import net.codicentro.core.CDCException;
+import net.codicentro.core.TypeCast;
+import net.codicentro.core.Types.DBProtocolType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
