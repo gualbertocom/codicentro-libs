@@ -57,20 +57,6 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public <TEntity> void persist(TEntity[] entities) {
-        TEntity entity = null;
-        try {
-            for (int idx = 0; idx < entities.length; idx++) {
-                entity = entities[idx];
-                persist(entity);
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException(entity.toString(), ex);
-        }
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    @Override
     public <TEntity> void persist(Collection<TEntity> entities) {
         getHibernateTemplate().saveOrUpdateAll(entities);
     }
@@ -148,31 +134,13 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
     }
 
     @Override
-    @Deprecated
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql) {
-        return find(eClazz, sql, null);
-    }
-
-    @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql) {
         return find(eClazz, sql, null);
     }
 
     @Override
-    @Deprecated
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params) {
-        return find(eClazz, sql, params, null);
-    }
-
-    @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params) {
         return find(eClazz, sql, params, null);
-    }
-
-    @Override
-    @Deprecated
-    public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final String sql, final Object[] params, final Scalar[] scalars) {
-        return find(eClazz, new StringBuilder(sql), params, scalars);
     }
 
     @Override
