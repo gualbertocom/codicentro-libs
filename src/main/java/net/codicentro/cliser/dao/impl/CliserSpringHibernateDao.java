@@ -115,22 +115,22 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public List<?> find(final StringBuilder sql) {
-        return find(null, sql.toString(), null);
+        return find(null, sql, null);
     }
 
     @Override
     public List<?> find(final StringBuilder sql, final Scalar[] scalars) {
-        return find(null, sql.toString(), null, scalars);
+        return find(null, sql, null, scalars);
     }
 
     @Override
     public List<?> find(final StringBuilder sql, final Object[] params) {
-        return find(null, sql.toString(), params, null);
+        return find(null, sql, params, null);
     }
 
     @Override
     public List<?> find(final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
-        return find(null, sql.toString(), params, scalars);
+        return find(null, sql, params, scalars);
     }
 
     @Override
