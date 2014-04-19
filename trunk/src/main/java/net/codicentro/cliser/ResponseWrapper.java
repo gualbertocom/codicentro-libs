@@ -387,35 +387,6 @@ public class ResponseWrapper implements Serializable {
 
     /**
      *
-     * @param data
-     * @return
-     */
-    public static String success(String data) {
-        return success(data, -1);
-    }
-
-    public static String success(String data, int total) {
-        StringBuilder sb = new StringBuilder("{");
-        sb.append("data:").append(data);
-        sb.append(",success:").append(true);
-        sb.append(",rowCount:").append(total);
-        sb.append("}");
-        return charSpecial(sb.toString());
-    }
-
-    public static String failed(String message) {
-        if (!TypeCast.isBlank(message)) {
-            message = message.replaceAll("\"", "\\\\\"");
-        }
-        StringBuilder sb = new StringBuilder("{");
-        sb.append("message:\"").append(message).append("\"");
-        sb.append(",success:").append(false);
-        sb.append("}");
-        return charSpecial(sb.toString());
-    }
-
-    /**
-     *
      * @param r
      * @return
      */
@@ -476,5 +447,81 @@ public class ResponseWrapper implements Serializable {
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
+    }
+
+    /**
+     * Generates modelMap to return in the modelAndView
+     *
+     * @param <Entity>
+     * @param entities
+     * @return
+     */
+    public static <Entity> Map<String, Object> success(List<Entity> entities) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        modelMap.put("total", entities.size());
+        modelMap.put("message", entities);
+        modelMap.put("success", true);
+        return modelMap;
+    }
+
+    public static <Entity> Map<String, Object> success(List<Entity> entities, Integer total) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        modelMap.put("message", entities);
+        modelMap.put("total", total);
+        modelMap.put("success", true);
+        return modelMap;
+    }
+
+    /**
+     * Generates modelMap to return in the modelAndView
+     *
+     * @param <Entity>
+     * @return
+     */
+    public static <Entity> Map<String, Object> success(Entity entity) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        modelMap.put("total", 1);
+        modelMap.put("message", entity);
+        modelMap.put("success", true);
+        return modelMap;
+    }
+
+    /**
+     * Generates modelMap to return in the modelAndView
+     *
+     * @param <Entity>
+     * @param msg
+     * @return
+     */
+    public static <Entity> Map<String, Object> success(String msg) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(3);
+        modelMap.put("total", 1);
+        modelMap.put("message", msg);
+        modelMap.put("success", true);
+        return modelMap;
+    }
+
+    /**
+     * Generates modelMap to return in the modelAndView in case
+     *
+     * @param msg
+     * @return
+     */
+    public static Map<String, Object> failed(String msg) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        modelMap.put("message", msg);
+        modelMap.put("success", false);
+        return modelMap;
+    }
+
+    public static void commit(HttpServletResponse response, Object data) throws IOException {
+        response.setHeader("Content-Type", "text/html");
+        response.setHeader("Expires", "Mon, 01 Jan 2007 01:00:00 GMT");
+        response.setHeader("Cache-Control", "must-revalidate");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        PrintWriter writer = response.getWriter();
+        writer.print(data);
+        writer.flush();
     }
 }
