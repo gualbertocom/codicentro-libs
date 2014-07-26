@@ -5,7 +5,7 @@
  * Place: Toluca, Estado de Mexico, Mexico.
  * Company: Codicentro©
  * Web: http://www.codicentro.net
- * Class Name: CliserDao.java
+ * Class Name: CliserDAO.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.criterion.DetachedCriteria;
 
-public interface CliserDao {
+public interface CliserDAO {
 
     /**
      *

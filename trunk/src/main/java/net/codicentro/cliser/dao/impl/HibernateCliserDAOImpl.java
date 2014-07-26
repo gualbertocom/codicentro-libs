@@ -5,7 +5,7 @@
  * Place: Toluca, Estado de Mexico, Mexico.
  * Company: Codicentro©
  * Web: http://www.codicentro.net
- * Class Name: CliserSpringHibernateDao.java
+ * Class Name: HibernateCliserDAOImpl.java
  * Purpose:
  * Revisions:
  * Ver        Date               Author                                      Description
@@ -13,7 +13,7 @@
  **/
 package net.codicentro.cliser.dao.impl;
 
-import net.codicentro.cliser.dao.CliserDao;
+import net.codicentro.cliser.dao.CliserDAO;
 import net.codicentro.utils.Scalar;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public abstract class CliserSpringHibernateDao extends HibernateDaoSupport implements CliserDao {
+public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport implements CliserDAO {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
@@ -145,7 +145,7 @@ public abstract class CliserSpringHibernateDao extends HibernateDaoSupport imple
 
     @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
-        return getHibernateTemplate().executeFind(new HibernateCallback<List<TEntity>>() {
+        return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
             @Override
             public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
                 SQLQuery query = session.createSQLQuery(sql.toString());

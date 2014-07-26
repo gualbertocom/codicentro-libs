@@ -13,7 +13,7 @@
  **/
 package net.codicentro.cliser;
 
-import net.codicentro.cliser.dao.CliserDao;
+import net.codicentro.cliser.dao.CliserDAO;
 import net.codicentro.core.CDCException;
 import net.codicentro.core.TypeCast;
 import net.codicentro.core.Types.DBProtocolType;
@@ -63,7 +63,7 @@ public class BL implements Serializable {
     private Object oEntity = null;
     private String dateFormat = null;
     @Resource
-    private CliserDao dao;
+    private CliserDAO dao;
 
     /**
      *
@@ -1235,7 +1235,7 @@ public class BL implements Serializable {
     /**
      * @return the dao
      */
-    public CliserDao getDao() {
+    public CliserDAO getDao() {
         return dao;
     }
 
@@ -1243,7 +1243,7 @@ public class BL implements Serializable {
      * @param dao the dao to set
      * @deprecated 
      */
-    public void setccDao(CliserDao dao) {
+    public void setccDao(CliserDAO dao) {
         this.dao = dao;
     }
 

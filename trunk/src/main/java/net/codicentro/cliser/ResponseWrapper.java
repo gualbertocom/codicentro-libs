@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 public class ResponseWrapper implements Serializable {
 
-    private Logger log = LoggerFactory.getLogger(ResponseWrapper.class);
+    private final Logger log = LoggerFactory.getLogger(ResponseWrapper.class);
     /**
      *
      */
@@ -449,67 +449,61 @@ public class ResponseWrapper implements Serializable {
         this.dateFormat = dateFormat;
     }
 
-    /**
-     * Generates modelMap to return in the modelAndView
-     *
-     * @param <Entity>
-     * @param entities
-     * @return
-     */
     public static <Entity> Map<String, Object> success(List<Entity> entities) {
+        return success(null, entities);
+    }
+
+    public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put("total", entities.size());
-        modelMap.put("message", entities);
+        modelMap.put("total", entities == null ? 0 : entities.size());
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entities);
         modelMap.put("success", true);
         return modelMap;
     }
 
     public static <Entity> Map<String, Object> success(List<Entity> entities, Integer total) {
+        return success(null, entities, total);
+    }
+
+    public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities, Integer total) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put("message", entities);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entities);
         modelMap.put("total", total);
         modelMap.put("success", true);
         return modelMap;
     }
 
-    /**
-     * Generates modelMap to return in the modelAndView
-     *
-     * @param <Entity>
-     * @return
-     */
     public static <Entity> Map<String, Object> success(Entity entity) {
+        return success(null, entity);
+    }
+
+    public static <Entity> Map<String, Object> success(String rootProperty, Entity entity) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
         modelMap.put("total", 1);
-        modelMap.put("message", entity);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entity);
         modelMap.put("success", true);
         return modelMap;
     }
 
-    /**
-     * Generates modelMap to return in the modelAndView
-     *
-     * @param <Entity>
-     * @param msg
-     * @return
-     */
     public static <Entity> Map<String, Object> success(String msg) {
+        return success(null, msg);
+    }
+
+    public static <Entity> Map<String, Object> success(String rootProperty, String msg) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
         modelMap.put("total", 1);
-        modelMap.put("message", msg);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, msg);
         modelMap.put("success", true);
         return modelMap;
     }
 
-    /**
-     * Generates modelMap to return in the modelAndView in case
-     *
-     * @param msg
-     * @return
-     */
-    public static Map<String, Object> failed(String msg) {
+    public static Map<String, Object> failed(String value) {
+        return failed(null, value);
+    }
+
+    public static Map<String, Object> failed(String rootProperty, String value) {
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
-        modelMap.put("message", msg);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, value);
         modelMap.put("success", false);
         return modelMap;
     }
