@@ -456,7 +456,7 @@ public class ResponseWrapper implements Serializable {
     public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
         modelMap.put("total", entities == null ? 0 : entities.size());
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entities);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
         modelMap.put("success", true);
         return modelMap;
     }
@@ -467,7 +467,7 @@ public class ResponseWrapper implements Serializable {
 
     public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities, Integer total) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entities);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
         modelMap.put("total", total);
         modelMap.put("success", true);
         return modelMap;
@@ -480,7 +480,7 @@ public class ResponseWrapper implements Serializable {
     public static <Entity> Map<String, Object> success(String rootProperty, Entity entity) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
         modelMap.put("total", 1);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, entity);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entity);
         modelMap.put("success", true);
         return modelMap;
     }
@@ -492,7 +492,7 @@ public class ResponseWrapper implements Serializable {
     public static <Entity> Map<String, Object> success(String rootProperty, String msg) {
         Map<String, Object> modelMap = new HashMap<String, Object>(3);
         modelMap.put("total", 1);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, msg);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, msg);
         modelMap.put("success", true);
         return modelMap;
     }
@@ -503,7 +503,7 @@ public class ResponseWrapper implements Serializable {
 
     public static Map<String, Object> failed(String rootProperty, String value) {
         Map<String, Object> modelMap = new HashMap<String, Object>(2);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "message" : rootProperty, value);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, value);
         modelMap.put("success", false);
         return modelMap;
     }
