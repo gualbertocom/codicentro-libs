@@ -450,26 +450,28 @@ public class ResponseWrapper implements Serializable {
     }
 
     public static <Entity> Map<String, Object> success(List<Entity> entities) {
-        return success(null, null, entities, true);
+        return success(null, null, entities, true, false);
     }
 
     public static <Entity> Map<String, Object> success(Entity entity) {
         List<Entity> entities = new ArrayList<Entity>();
         entities.add(entity);
-        return success(null, null, entities, true);
+        return success(null, null, entities, true, true);
     }
 
     public static <Entity> Map<String, Object> success(String msg) {
-        return success(null, msg, null, true);
+        return success(null, msg, null, true, false);
     }
 
     public static <Entity> Map<String, Object> failed(String msg) {
-        return success(null, msg, null, false);
+        return success(null, msg, null, false, false);
     }
 
-    private static <Entity> Map<String, Object> success(String rootProperty, String message, List<Entity> entities, Boolean success) {
+    private static <Entity> Map<String, Object> success(String rootProperty, String message, List<Entity> entities, Boolean success, Boolean simpleEntity) {
         Map<String, Object> modelMap = new HashMap<String, Object>(4);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty,
+                simpleEntity && entities != null ? entities.get(0) : entities
+        );
         modelMap.put("total", entities == null ? 0 : entities.size());
         modelMap.put("message", TypeCast.isBlank(message) ? "Ok" : message);
         modelMap.put("success", success);
