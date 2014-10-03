@@ -450,61 +450,29 @@ public class ResponseWrapper implements Serializable {
     }
 
     public static <Entity> Map<String, Object> success(List<Entity> entities) {
-        return success(null, entities);
-    }
-
-    public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities) {
-        Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put("total", entities == null ? 0 : entities.size());
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
-        modelMap.put("success", true);
-        return modelMap;
-    }
-
-    public static <Entity> Map<String, Object> success(List<Entity> entities, Integer total) {
-        return success(null, entities, total);
-    }
-
-    public static <Entity> Map<String, Object> success(String rootProperty, List<Entity> entities, Integer total) {
-        Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
-        modelMap.put("total", total);
-        modelMap.put("success", true);
-        return modelMap;
+        return success(null, null, entities, true);
     }
 
     public static <Entity> Map<String, Object> success(Entity entity) {
-        return success(null, entity);
-    }
-
-    public static <Entity> Map<String, Object> success(String rootProperty, Entity entity) {
-        Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put("total", 1);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entity);
-        modelMap.put("success", true);
-        return modelMap;
+        List<Entity> entities = new ArrayList<Entity>();
+        entities.add(entity);
+        return success(null, null, entities, true);
     }
 
     public static <Entity> Map<String, Object> success(String msg) {
-        return success(null, msg);
+        return success(null, msg, null, true);
     }
 
-    public static <Entity> Map<String, Object> success(String rootProperty, String msg) {
-        Map<String, Object> modelMap = new HashMap<String, Object>(3);
-        modelMap.put("total", 1);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, msg);
-        modelMap.put("success", true);
-        return modelMap;
+    public static <Entity> Map<String, Object> failed(String msg) {
+        return success(null, msg, null, false);
     }
 
-    public static Map<String, Object> failed(String value) {
-        return failed(null, value);
-    }
-
-    public static Map<String, Object> failed(String rootProperty, String value) {
-        Map<String, Object> modelMap = new HashMap<String, Object>(2);
-        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, value);
-        modelMap.put("success", false);
+    private static <Entity> Map<String, Object> success(String rootProperty, String message, List<Entity> entities, Boolean success) {
+        Map<String, Object> modelMap = new HashMap<String, Object>(4);
+        modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty, entities);
+        modelMap.put("total", entities == null ? 0 : entities.size());
+        modelMap.put("message", TypeCast.isBlank(message) ? "Ok" : message);
+        modelMap.put("success", success);
         return modelMap;
     }
 
