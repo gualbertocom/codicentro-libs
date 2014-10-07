@@ -449,24 +449,71 @@ public class ResponseWrapper implements Serializable {
         this.dateFormat = dateFormat;
     }
 
+    /**
+     *
+     * @param <Entity>
+     * @param entities
+     * @return
+     */
     public static <Entity> Map<String, Object> success(List<Entity> entities) {
         return success(null, null, entities, true, false);
     }
 
+    /**
+     *
+     * @param <Entity>
+     * @param entity
+     * @return
+     */
     public static <Entity> Map<String, Object> success(Entity entity) {
         List<Entity> entities = new ArrayList<Entity>();
         entities.add(entity);
         return success(null, null, entities, true, true);
     }
 
-    public static <Entity> Map<String, Object> success(String msg) {
-        return success(null, msg, null, true, false);
+    /**
+     *
+     * @param <Entity>
+     * @param entity
+     * @param message
+     * @return
+     */
+    public static <Entity> Map<String, Object> success(Entity entity, String message) {
+        List<Entity> entities = new ArrayList<Entity>();
+        entities.add(entity);
+        return success(null, message, entities, true, true);
     }
 
-    public static <Entity> Map<String, Object> failed(String msg) {
-        return success(null, msg, null, false, false);
+    /**
+     *
+     * @param <Entity>
+     * @param message
+     * @return
+     */
+    public static <Entity> Map<String, Object> success(String message) {
+        return success(null, message, null, true, false);
     }
 
+    /**
+     *
+     * @param <Entity>
+     * @param message
+     * @return
+     */
+    public static <Entity> Map<String, Object> failed(String message) {
+        return success(null, message, null, false, false);
+    }
+
+    /**
+     *
+     * @param <Entity>
+     * @param rootProperty
+     * @param message
+     * @param entities
+     * @param success
+     * @param simpleEntity
+     * @return
+     */
     private static <Entity> Map<String, Object> success(String rootProperty, String message, List<Entity> entities, Boolean success, Boolean simpleEntity) {
         Map<String, Object> modelMap = new HashMap<String, Object>(4);
         modelMap.put(TypeCast.isBlank(rootProperty) ? "data" : rootProperty,
