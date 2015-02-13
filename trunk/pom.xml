@@ -13,18 +13,20 @@
         <spring.framework.version>3.2.9.RELEASE</spring.framework.version>
         <hibernate.version>3.6.10.Final</hibernate.version>
     </properties>
-    <distributionManagement>
+     <distributionManagement>
         <repository>
-            <id>nexus-deploy</id>
+            <id>arm-deploy</id>
             <name>Nexus Managed Releases Repository</name>
             <uniqueVersion>false</uniqueVersion>
-            <url>http://201.157.37.214/arm-planetmedia/content/repositories/releases/</url>            
+            <!-- url>http://olaf.planetmedia.com.mx/arm/content/repositories/releases/</url -->      
+            <url>http://201.157.37.214/arm/content/repositories/releases/</url>             
         </repository>
         <snapshotRepository>
-            <id>nexus-deploy</id>
-            <uniqueVersion>false</uniqueVersion>           
+            <id>arm-deploy</id>
+            <uniqueVersion>false</uniqueVersion>            
             <name>Nexus Managed Snapshot Repository</name>
-            <url>http://201.157.37.214/arm-planetmedia/content/repositories/snapshots/</url>
+            <!-- url>http://olaf.planetmedia.com.mx/arm/content/repositories/snapshots/</url -->
+            <url>http://201.157.37.214/arm/content/repositories/snapshots/</url>       
         </snapshotRepository>
     </distributionManagement>
     <build>
