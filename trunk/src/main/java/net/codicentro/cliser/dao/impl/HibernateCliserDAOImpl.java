@@ -16,7 +16,6 @@ package net.codicentro.cliser.dao.impl;
 import net.codicentro.cliser.dao.CliserDAO;
 import net.codicentro.utils.Scalar;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,8 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate4.HibernateCallback;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +57,7 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public <TEntity> void persist(Collection<TEntity> entities) {
-        getHibernateTemplate().saveOrUpdateAll(entities);
+        getHibernateTemplate().saveOrUpdate(entities);
     }
 
     @Transactional(readOnly = true)
@@ -82,14 +81,14 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql) {
-        final List<TEntity> entities = getHibernateTemplate().find(hql);
+        final List<TEntity> entities = (List<TEntity>) getHibernateTemplate().find(hql);
         return entities;
     }
 
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final DetachedCriteria criteria, final Integer start, final Integer limit) {
-        return getHibernateTemplate().findByCriteria(criteria, start, limit);
+        return (List<TEntity>) getHibernateTemplate().findByCriteria(criteria, start, limit);
     }
 
     @Override
@@ -110,7 +109,7 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
     @Transactional(readOnly = true)
     @Override
     public <TEntity> List<TEntity> find(final String hql, final Object... values) {
-        return getHibernateTemplate().find(hql, values);
+        return (List<TEntity>) getHibernateTemplate().find(hql, values);
     }
 
     @Override
@@ -146,8 +145,9 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
     @Override
     public <TEntity> List<TEntity> find(final Class<TEntity> eClazz, final StringBuilder sql, final Object[] params, final Scalar[] scalars) {
         return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
+
             @Override
-            public List<TEntity> doInHibernate(Session session) throws HibernateException, SQLException {
+            public List<TEntity> doInHibernate(Session session) throws HibernateException {
                 SQLQuery query = session.createSQLQuery(sql.toString());
                 if (eClazz != null) {
                     query.addEntity(eClazz);
@@ -175,7 +175,7 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
     public <TEntity> List<TEntity> findByQueryName(final String queryName, final Map<String, Object> values) {
         return getHibernateTemplate().execute(new HibernateCallback<List<TEntity>>() {
             @Override
-            public List<TEntity> doInHibernate(final Session session) throws HibernateException, SQLException {
+            public List<TEntity> doInHibernate(final Session session) throws HibernateException {
                 Query query = session.getNamedQuery(queryName);
                 for (String key : values.keySet()) {
                     query.setParameter(key, values.get(key));
@@ -215,7 +215,7 @@ public abstract class HibernateCliserDAOImpl extends HibernateDaoSupport impleme
 
         return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
             @Override
-            public Integer doInHibernate(Session session) throws HibernateException, SQLException {
+            public Integer doInHibernate(Session session) throws HibernateException {
                 SQLQuery query = session.createSQLQuery(sql.toString());
                 if (params != null && params.length > 0) {
                     for (int idx = 0; idx < params.length; idx++) {
