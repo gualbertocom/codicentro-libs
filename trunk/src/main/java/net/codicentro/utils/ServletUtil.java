@@ -44,7 +44,7 @@ public class ServletUtil {
         response.setContentLength((int) f.length());
         response.setHeader("Content-Disposition", "attachment; filename=\"" + originalFilename + "\"");
         Cookie ck = new Cookie("fileDownloadStatus", "complete");
-        ck.setSecure(false);
+        ck.setSecure(true);
         ck.setPath("/");        
         response.addCookie(ck);
         byte[] bbuf = new byte[1024];
